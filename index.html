@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Willismar</title>
+
+<!-- PWA -->
+<meta name="application-name" content="Willismar">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Willismar">
+<meta name="theme-color" content="#0a2455">
+<meta name="description" content="Sistema de Gestión — Willismar Técnico">
+<link rel="manifest" href="manifest.json">
+
+<!-- Ícono para iOS (Apple) -->
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- Ícono SVG inline como fallback generado -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a2455'/><text y='.9em' font-size='70' x='15'>🔧</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#1450a3; --azul2:#1a60c0; --azul3:#0d3d8a;
+  --azulOscuro:#0a2455; --azulClaro:#e8f0fe;
+  --cian:#0ea5e9; --cian2:#38bdf8; --cianSuave:#f0f9ff;
+  --verde:#16a34a; --rojo:#dc2626;
+  --gris:#f0f4f8; --gris2:#e2e8f0; --gris3:#cbd5e1;
+  --texto:#0f172a; --texto2:#475569; --blanco:#fff;
+  --sombra:0 2px 16px rgba(20,80,163,.08); --sombraG:0 8px 32px rgba(20,80,163,.15);
+  --radio:12px; --radio2:16px;
+  --font:'Plus Jakarta Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--gris);color:var(--texto);min-height:100vh;}
+
+/* ─── SIDEBAR ─── */
+#sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:var(--azulOscuro);
+  display:flex;flex-direction:column;z-index:100;transition:.3s;}
+.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sb-logo-top{display:flex;align-items:center;gap:12px;}
+.sb-logo-icon{width:40px;height:40px;background:var(--cian);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.sb-logo h1{color:#fff;font-size:1.05rem;font-weight:900;letter-spacing:.3px;line-height:1.2;}
+.sb-logo p{color:rgba(255,255,255,.35);font-size:.62rem;margin-top:6px;letter-spacing:.2px;line-height:1.5;}
+.sb-nav{flex:1;overflow-y:auto;padding:10px 12px;}
+.nav-section{font-size:.58rem;font-weight:800;color:rgba(255,255,255,.28);letter-spacing:1.8px;
+  text-transform:uppercase;padding:16px 8px 5px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;color:rgba(255,255,255,.6);
+  cursor:pointer;font-size:.82rem;font-weight:600;transition:.18s;border-radius:10px;margin-bottom:2px;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(14,165,233,.25);color:var(--cian2);font-weight:700;}
+.nav-item .ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0;}
+.sb-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.06);
+  color:rgba(255,255,255,.25);font-size:.6rem;text-align:center;line-height:1.6;}
+
+/* ─── MAIN ─── */
+#main{margin-left:240px;min-height:100vh;}
+.topbar{background:var(--blanco);padding:14px 28px;display:flex;align-items:center;
+  justify-content:space-between;box-shadow:0 1px 0 var(--gris2);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar h2{font-size:1rem;color:var(--azul);font-weight:800;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.badge{background:var(--cian);color:#fff;border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:800;}
+.badge-azul{background:var(--azul);color:#fff;border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:800;}
+.content{padding:24px 28px;}
+
+/* ─── KPI CARDS ─── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+.kpi{background:var(--blanco);border-radius:var(--radio2);padding:18px 20px;
+  box-shadow:var(--sombra);border-left:4px solid var(--azul);transition:.2s;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;right:-10px;top:-10px;width:70px;height:70px;
+  border-radius:50%;background:currentColor;opacity:.04;}
+.kpi:hover{transform:translateY(-3px);box-shadow:var(--sombraG);}
+.kpi.k-naranja{border-left-color:var(--naranja);}
+.kpi.k-verde{border-left-color:var(--verde);}
+.kpi.k-rojo{border-left-color:var(--rojo);}
+.kpi.k-cielo{border-left-color:#0ea5e9;}
+.kpi.k-morado{border-left-color:#7c3aed;}
+.kpi h3{font-size:.65rem;color:var(--texto2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;font-weight:700;}
+.kpi .num{font-size:2rem;font-weight:900;color:var(--azul);line-height:1;}
+.kpi.k-naranja .num{color:var(--naranja);}
+.kpi.k-verde .num{color:var(--verde);}
+.kpi.k-rojo .num{color:var(--rojo);}
+.kpi.k-cielo .num{color:#0ea5e9;}
+.kpi.k-morado .num{color:#7c3aed;}
+.kpi-sub{font-size:.68rem;color:var(--texto2);margin-top:4px;}
+
+/* ─── ORDEN CARDS (estilo EMPRESA) ─── */
+.ordenes-kanban{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-top:6px;}
+.orden-card{background:var(--blanco);border-radius:var(--radio2);box-shadow:var(--sombra);
+  border-top:4px solid var(--gris3);transition:.22s;overflow:hidden;}
+.orden-card:hover{transform:translateY(-4px);box-shadow:var(--sombraG);}
+.orden-card.st-pendiente{border-top-color:#f59e0b;}
+.orden-card.st-proceso{border-top-color:#3b82f6;}
+.orden-card.st-listo{border-top-color:#8b5cf6;}
+.orden-card.st-entregado{border-top-color:#10b981;}
+.orden-card.st-cobrado{border-top-color:var(--verde);}
+.ord-card-hdr{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:flex-start;}
+.ord-num{font-size:.7rem;font-weight:800;color:var(--texto2);letter-spacing:.5px;}
+.ord-equipo{font-size:.95rem;font-weight:800;color:var(--azul);margin-top:2px;line-height:1.2;}
+.ord-marca{font-size:.75rem;color:var(--texto2);margin-top:1px;}
+.ord-card-body{padding:0 16px 12px;}
+.ord-cliente{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;color:var(--texto);margin-bottom:6px;}
+.ord-falla{font-size:.75rem;color:var(--texto2);line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ord-card-footer{padding:10px 16px;background:var(--gris);border-top:1px solid var(--gris2);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ord-total{font-size:1rem;font-weight:900;color:var(--azul);}
+.ord-fecha{font-size:.68rem;color:var(--texto2);}
+
+/* ─── ESTADO BADGES ─── */
+.est-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
+.est-pendiente{background:#fef3c7;color:#92400e;}
+.est-proceso{background:#dbeafe;color:#1e40af;}
+.est-listo{background:#ede9fe;color:#5b21b6;}
+.est-entregado{background:#d1fae5;color:#064e3b;}
+.est-cobrado{background:#dcfce7;color:#14532d;}
+
+/* ─── PANEL ─── */
+.panel{background:var(--blanco);border-radius:var(--radio2);box-shadow:var(--sombra);overflow:hidden;margin-bottom:18px;}
+.panel-hdr{background:var(--azul);color:#fff;padding:13px 20px;display:flex;align-items:center;
+  justify-content:space-between;font-weight:800;font-size:.88rem;}
+.panel-hdr .ph-btn{background:var(--cian);color:#fff;border-radius:8px;padding:5px 14px;
+  font-size:.73rem;cursor:pointer;transition:.18s;border:none;font-weight:800;}
+.panel-hdr .ph-btn:hover{background:var(--cian2);}
+.panel-body{padding:18px 20px;}
+
+/* ─── TABLA ─── */
+.tabla-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.81rem;}
+thead tr{background:var(--azul);color:#fff;}
+thead th{padding:10px 14px;text-align:left;font-weight:700;white-space:nowrap;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;}
+tbody tr{border-bottom:1px solid var(--gris2);}
+tbody tr:hover{background:#f8fafc;}
+tbody td{padding:9px 14px;vertical-align:middle;}
+
+/* ─── FORM ─── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-size:.7rem;font-weight:700;color:var(--texto2);text-transform:uppercase;letter-spacing:.4px;}
+.form-group input,.form-group select,.form-group textarea{
+  border:2px solid var(--gris2);border-radius:9px;padding:9px 12px;font-size:.85rem;font-family:var(--font);
+  color:var(--texto);transition:.18s;background:#fafbfc;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--cian);background:#fff;box-shadow:0 0 0 3px rgba(14,165,233,.12);}
+.form-group textarea{resize:vertical;min-height:58px;}
+.form-full{grid-column:1/-1;}
+.form-group input[readonly]{background:var(--gris);color:var(--texto2);}
+
+/* ─── BOTONES ─── */
+.btn{padding:9px 18px;border:none;border-radius:9px;font-size:.82rem;font-weight:700;font-family:var(--font);
+  cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:var(--azul);color:#fff;} .btn-primary:hover{background:var(--azul2);}
+.btn-naranja{background:var(--cian);color:#fff;} .btn-naranja:hover{background:var(--cian2);}
+.btn-verde{background:var(--verde);color:#fff;} .btn-verde:hover{opacity:.88;}
+.btn-rojo{background:var(--rojo);color:#fff;padding:5px 11px;font-size:.73rem;}
+.btn-ghost{background:var(--gris);color:var(--texto2);border:2px solid var(--gris2);}
+.btn-ghost:hover{background:var(--gris2);}
+.btn-sm{padding:5px 11px;font-size:.72rem;}
+.btn-group{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--gris2);margin-bottom:16px;}
+.tab{padding:9px 18px;cursor:pointer;font-size:.82rem;font-weight:700;color:#94a3b8;
+  border-bottom:2px solid transparent;margin-bottom:-2px;transition:.18s;}
+.tab.active{color:var(--azul);border-bottom-color:var(--cian);}
+
+/* ─── SEARCH ─── */
+.search-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.search-bar input,.search-bar select{padding:9px 13px;border:2px solid var(--gris2);
+  border-radius:9px;font-size:.82rem;background:var(--gris);font-family:var(--font);}
+.search-bar input{flex:1;min-width:160px;}
+.search-bar input:focus,.search-bar select:focus{outline:none;border-color:var(--cian);background:#fff;}
+
+/* ─── MODAL ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:var(--radio2);width:90%;max-width:760px;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.25);}
+.modal-hdr{background:var(--azul);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;border-radius:var(--radio2) var(--radio2) 0 0;position:sticky;top:0;z-index:10;}
+.modal-hdr h3{font-size:.96rem;font-weight:800;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.5rem;cursor:pointer;line-height:1;transition:.15s;}
+.modal-close:hover{color:#fff;}
+.modal-body{padding:22px;}
+.modal-footer{padding:16px 22px;border-top:1px solid var(--gris2);display:flex;justify-content:flex-end;gap:8px;background:#fafbfc;}
+
+/* ─── ITEMS TABLE ─── */
+.items-area{margin-top:12px;}
+.items-area table{font-size:.79rem;}
+.items-area input,.items-area select{border:1.5px solid var(--gris2);border-radius:7px;padding:6px 8px;width:100%;font-size:.79rem;font-family:var(--font);}
+
+/* ─── TOTALES ─── */
+.totales-box{background:var(--gris);border-radius:12px;padding:16px;margin-top:14px;max-width:320px;margin-left:auto;}
+.totales-box .fila{display:flex;justify-content:space-between;font-size:.83rem;padding:4px 0;color:var(--texto2);}
+.totales-box .fila strong{color:var(--texto);}
+.totales-box .fila.total{font-weight:900;font-size:1.05rem;color:var(--azul);border-top:2px solid var(--cian);margin-top:6px;padding-top:8px;}
+
+/* ─── ALERT ─── */
+.alert{padding:10px 14px;border-radius:9px;font-size:.82rem;margin-bottom:12px;display:none;}
+.alert.show{display:block;}
+.alert-success{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}
+.alert-error{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+.alert-info{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;}
+
+/* ─── STOCK ─── */
+.stock-low{color:var(--rojo);font-weight:800;}
+.stock-ok{color:var(--verde);font-weight:700;}
+.iva-badge{background:#ede9fe;color:#5b21b6;border-radius:6px;padding:2px 7px;font-size:.65rem;font-weight:800;}
+.sin-iva{background:#f1f5f9;color:#64748b;border-radius:6px;padding:2px 7px;font-size:.65rem;font-weight:700;}
+
+/* ─── CUSTODIA ─── */
+.custodia-vencida{background:#fee2e2;}
+.custodia-prox{background:#fef9c3;}
+.custodia-ok{background:#f0fdf4;}
+
+/* ─── TARJETAS UNIVERSALES ─── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:6px;}
+.uni-card{background:var(--blanco);border-radius:var(--radio2);box-shadow:var(--sombra);border-top:4px solid var(--azul);transition:.22s;overflow:hidden;}
+.uni-card:hover{transform:translateY(-3px);box-shadow:var(--sombraG);}
+.uni-card.c-cian{border-top-color:var(--cian);}
+.uni-card.c-verde{border-top-color:var(--verde);}
+.uni-card.c-rojo{border-top-color:var(--rojo);}
+.uni-card.c-morado{border-top-color:#7c3aed;}
+.uni-card.c-amarillo{border-top-color:#f59e0b;}
+.uni-card-hdr{padding:13px 16px 8px;display:flex;justify-content:space-between;align-items:flex-start;}
+.uni-card-body{padding:0 16px 12px;}
+.uni-card-footer{padding:9px 16px;background:var(--gris);border-top:1px solid var(--gris2);display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.uc-num{font-size:.68rem;font-weight:800;color:var(--texto2);letter-spacing:.5px;}
+.uc-titulo{font-size:.92rem;font-weight:800;color:var(--azul);margin-top:2px;line-height:1.25;}
+.uc-sub{font-size:.74rem;color:var(--texto2);margin-top:2px;}
+.uc-monto{font-size:1rem;font-weight:900;color:var(--azul);}
+.uc-row{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--texto);margin-bottom:5px;}
+
+/* ─── ACADEMICO ─── */
+.acad-card{background:var(--blanco);border-radius:var(--radio2);box-shadow:var(--sombra);border-top:4px solid #7c3aed;transition:.22s;overflow:hidden;padding:16px;}
+.acad-card:hover{transform:translateY(-3px);box-shadow:var(--sombraG);}
+.acad-tipo-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:800;background:#ede9fe;color:#5b21b6;}
+.acad-entregado{background:#dcfce7;color:#166534;}
+.acad-proceso{background:#dbeafe;color:#1e40af;}
+.acad-pendiente{background:#fef3c7;color:#92400e;}
+.acad-cobrado{background:#f0fdf4;color:#14532d;}
+.file-upload-box{border:2px dashed var(--gris3);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.18s;background:#fafbfc;}
+.file-upload-box:hover{border-color:var(--naranja);background:var(--naranjaSuave);}
+.file-upload-box.has-file{border-color:var(--verde);background:#f0fdf4;}
+.whatsapp-btn{display:inline-flex;align-items:center;gap:6px;background:#25d366;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:.73rem;font-weight:800;cursor:pointer;text-decoration:none;transition:.18s;}
+.whatsapp-btn:hover{background:#1da851;}
+
+/* ─── PAGE ─── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ─── SUBMENU ─── */
+.nav-parent{justify-content:space-between;padding-right:10px;}
+.nav-arrow{font-size:.7rem;transition:.25s;color:rgba(255,255,255,.4);flex-shrink:0;margin-left:auto;}
+.nav-arrow.open{transform:rotate(90deg);color:var(--cian2);}
+.nav-submenu{display:none;overflow:hidden;padding-left:4px;}
+.nav-submenu.open{display:block;}
+.nav-child{padding-left:28px;font-size:.78rem;margin-bottom:1px;}
+.nav-child .ico{font-size:.85rem;}
+.nav-child.active{background:rgba(14,165,233,.18);color:var(--cian2);}
+.nav-parent.sub-active{background:rgba(14,165,233,.08);color:#fff;}
+
+/* ─── MÓVIL ─── */
+@media(max-width:768px){
+  /* Ocultar sidebar en móvil */
+  #sidebar{ display:none; }
+  #main{ margin-left:0; padding-bottom:70px; }
+
+  /* Topbar móvil */
+  .topbar{ padding:10px 14px; }
+  .topbar h2{ font-size:.88rem; }
+  #sync-status{ display:none; }
+
+  /* Contenido */
+  .content{ padding:14px; }
+
+  /* KPI más compacto */
+  .kpi-grid{ grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:14px; }
+  .kpi{ padding:12px 14px; }
+  .kpi .num{ font-size:1.5rem; }
+  .kpi h3{ font-size:.6rem; }
+
+  /* Tablas en móvil — scroll horizontal */
+  .tabla-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table{ font-size:.72rem; min-width:500px; }
+  thead th{ padding:8px 10px; font-size:.65rem; }
+  tbody td{ padding:7px 10px; }
+
+  /* Cards órdenes */
+  .ordenes-kanban{ grid-template-columns:1fr; }
+
+  /* Modales */
+  .modal{ width:96%; max-height:88vh; }
+  .modal-body{ padding:14px; }
+  .form-grid{ grid-template-columns:1fr; gap:10px; }
+
+  /* Panel headers */
+  .panel-hdr{ font-size:.8rem; flex-wrap:wrap; gap:8px; }
+  .ph-btn{ font-size:.68rem; padding:5px 10px; }
+
+  /* Search bar */
+  .search-bar{ flex-direction:column; }
+  .search-bar input, .search-bar select{ width:100%; }
+
+  /* Dash grid */
+  .dash-grid{ grid-template-columns:1fr; }
+
+  /* Botones acción */
+  .btn-group{ flex-wrap:wrap; }
+  .btn{ font-size:.78rem; padding:8px 14px; }
+
+  /* Formularios config */
+  .form-group input, .form-group select, .form-group textarea{ font-size:.85rem; }
+}
+
+/* ─── BARRA NAVEGACIÓN INFERIOR (MÓVIL) ─── */
+#mobile-nav{
+  display:none;
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background:var(--azulOscuro);
+  border-top:1px solid rgba(255,255,255,.1);
+  z-index:200;
+  padding:6px 0 8px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.3);
+}
+#mobile-nav .mnav-items{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+}
+#mobile-nav .mnav-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  padding:4px 8px;
+  cursor:pointer;
+  color:rgba(255,255,255,.5);
+  font-size:.58rem;
+  font-weight:700;
+  border:none;
+  background:none;
+  font-family:var(--font);
+  transition:.18s;
+  border-radius:10px;
+  min-width:52px;
+}
+#mobile-nav .mnav-btn .mico{ font-size:1.3rem; line-height:1; }
+#mobile-nav .mnav-btn.active{ color:var(--cian2); }
+#mobile-nav .mnav-btn.active .mico{ transform:scale(1.15); }
+
+/* Botón "más" para acceder al resto del menú */
+#mobile-more-menu{
+  display:none;
+  position:fixed;
+  bottom:70px; left:0; right:0;
+  background:var(--azulOscuro);
+  border-top:1px solid rgba(255,255,255,.1);
+  border-radius:20px 20px 0 0;
+  z-index:199;
+  padding:16px 12px;
+  box-shadow:0 -8px 30px rgba(0,0,0,.4);
+  animation:slideUp .2s ease;
+}
+@keyframes slideUp{ from{transform:translateY(100%)} to{transform:translateY(0)} }
+#mobile-more-menu .more-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+#mobile-more-menu .more-item{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:12px 6px;background:rgba(255,255,255,.06);border-radius:12px;
+  cursor:pointer;color:rgba(255,255,255,.8);font-size:.65rem;font-weight:700;
+  border:none;font-family:var(--font);text-align:center;
+}
+#mobile-more-menu .more-item .mico2{ font-size:1.4rem; }
+#mobile-more-menu .more-item:hover{ background:rgba(14,165,233,.2);color:var(--cian2); }
+#mobile-more-overlay{
+  display:none;position:fixed;inset:0;z-index:198;background:rgba(0,0,0,.4);
+}
+
+@media(max-width:768px){
+  #mobile-nav{ display:block; }
+}
+
+/* ─── VISTA TOGGLE ─── */
+.view-toggle{display:flex;gap:4px;background:var(--gris);border-radius:9px;padding:3px;}
+.view-btn{padding:5px 12px;border-radius:7px;border:none;cursor:pointer;font-size:.75rem;font-weight:700;background:transparent;color:var(--texto2);transition:.15s;}
+.view-btn.active{background:var(--blanco);color:var(--azul);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+/* ─── CAJA RESUMEN ─── */
+.caja-resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px;}
+.caja-card{background:var(--gris);border-radius:12px;padding:14px;text-align:center;}
+.caja-card h4{font-size:.65rem;color:var(--texto2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+.caja-card .monto{font-size:1.4rem;font-weight:900;color:var(--azul);}
+.caja-card.ing .monto{color:var(--verde);}
+.caja-card.egr .monto{color:var(--rojo);}
+
+/* ─── DASHBOARD PANELS ─── */
+.dash-grid{display:grid;grid-template-columns:1fr 300px;gap:18px;margin-top:6px;}
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr;}}
+.dash-side{display:flex;flex-direction:column;gap:14px;}
+.mini-panel{background:var(--blanco);border-radius:var(--radio2);box-shadow:var(--sombra);overflow:hidden;}
+.mini-panel .mp-hdr{background:var(--azul);color:#fff;padding:10px 16px;font-weight:800;font-size:.82rem;display:flex;align-items:center;justify-content:space-between;}
+.mini-panel .mp-body{padding:14px 16px;}
+.mp-item{padding:6px 0;border-bottom:1px solid var(--gris2);font-size:.78rem;}
+.mp-item:last-child{border-bottom:none;}
+
+/* ─── PRINT ─── */
+@media print{
+  #sidebar,#main .topbar,.no-print{display:none!important;}
+  #main{margin:0;}
+  .content{padding:0;}
+}
+.fact-print{background:#fff;padding:24px;font-size:.85rem;line-height:1.6;}
+.fact-print .fact-hdr{display:flex;justify-content:space-between;border-bottom:2px solid var(--azul);padding-bottom:14px;margin-bottom:18px;}
+.fact-print h2{color:var(--azul);font-size:1.2rem;font-weight:900;}
+.fact-print table{width:100%;border-collapse:collapse;margin:14px 0;}
+.fact-print table th{background:var(--azul);color:#fff;padding:8px 12px;text-align:left;font-size:.78rem;}
+.fact-print table td{padding:7px 12px;border-bottom:1px solid #eee;}
+.fact-totales{text-align:right;margin-top:12px;}
+.fact-totales div{display:flex;justify-content:flex-end;gap:20px;padding:3px 0;font-size:.85rem;}
+.fact-totales .grand{font-weight:900;font-size:1.1rem;color:var(--azul);border-top:2px solid var(--cian);padding-top:8px;margin-top:4px;}
+
+/* ─── ENVIO BOX ─── */
+.envio-box{background:#f0f9ff;border:2px solid #0ea5e9;border-radius:10px;padding:14px;margin-top:12px;}
+.envio-box h4{color:#0369a1;font-size:.8rem;font-weight:800;margin-bottom:10px;}
+.guia-link{display:inline-flex;align-items:center;gap:6px;background:#0ea5e9;color:#fff;
+  border-radius:7px;padding:6px 14px;font-size:.76rem;font-weight:800;text-decoration:none;cursor:pointer;}
+.guia-link:hover{background:#0284c7;}
+
+/* ─── IVA OPTS ─── */
+.iva-opt-box{margin-top:14px;padding:14px;background:var(--cianSuave);border:2px solid var(--cian);border-radius:12px;}
+.iva-radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+.iva-radio-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;
+  padding:8px 14px;border-radius:9px;border:2px solid var(--gris2);background:#fff;flex:1;min-width:140px;}
+
+/* ─── LOGIN ─── */
+.login-bg{background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f172a 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
+.login-card{background:#fff;border-radius:24px;padding:40px;width:100%;max-width:360px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.4);}
+.login-icon{width:72px;height:72px;background:var(--azul);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;}
+.login-card h1{font-size:1.5rem;font-weight:900;color:var(--azul);letter-spacing:-.3px;}
+.login-card p{font-size:.68rem;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;margin-bottom:28px;}
+.login-input{width:100%;padding:14px;border:2px solid var(--gris2);border-radius:12px;font-family:var(--font);font-size:1.1rem;font-weight:700;text-align:center;letter-spacing:4px;outline:none;transition:.18s;margin-bottom:12px;}
+.login-input:focus{border-color:var(--cian);}
+.login-input.error{border-color:var(--rojo);background:#fee2e2;}
+.login-btn{width:100%;padding:14px;background:var(--azul);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:.9rem;font-weight:900;cursor:pointer;transition:.18s;text-transform:uppercase;letter-spacing:.5px;}
+.login-btn:hover{background:var(--azul2);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="login-bg">
+  <div class="login-card">
+    <div class="login-icon">🔧</div>
+    <h1 id="cfg-login-nombre">TécnicoPRO</h1>
+    <p>Sistema de Gestión — Acceso</p>
+    <input type="password" id="login-pass" class="login-input" placeholder="••••" autocomplete="off" onkeydown="if(event.key==='Enter') doLogin()">
+    <div id="login-error" style="color:var(--rojo);font-size:.78rem;font-weight:800;margin-bottom:10px;display:none;">❌ Clave incorrecta</div>
+    <button class="login-btn" onclick="doLogin()">Ingresar →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-top">
+      <div class="sb-logo-icon">🔧</div>
+      <div><h1 id="sb-nombre">TécnicoPRO</h1></div>
+    </div>
+    <p id="sb-slogan">Servicio Técnico · PCs · Laptops · Impresoras</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showPage('dashboard')"><span class="ico">🏠</span> Dashboard</div>
+    <div class="nav-item nav-parent" onclick="toggleSubMenu('sub-ordenes')"><span class="ico">📋</span> Órdenes de Trabajo <span class="nav-arrow" id="arrow-sub-ordenes">▸</span></div>
+    <div class="nav-submenu" id="sub-ordenes">
+      <div class="nav-item nav-child" onclick="showPage('ordenes')"><span class="ico">🔧</span> Reparación Equipos</div>
+      <div class="nav-item nav-child" onclick="showPage('academico')"><span class="ico">🎓</span> Trabajos Académicos</div>
+    </div>
+    <div class="nav-item" onclick="showPage('facturas')"><span class="ico">🧾</span> Facturas / IVA</div>
+    <div class="nav-section">Gestión</div>
+    <div class="nav-item" onclick="showPage('clientes')"><span class="ico">👥</span> Clientes</div>
+    <div class="nav-item" onclick="showPage('stock')"><span class="ico">📦</span> Inventario</div>
+    <div class="nav-item" onclick="showPage('compras')"><span class="ico">🛒</span> Compras / Envíos</div>
+    <div class="nav-section">Finanzas</div>
+    <div class="nav-item" onclick="showPage('caja')"><span class="ico">💰</span> Caja</div>
+    <div class="nav-item" onclick="showPage('custodia')"><span class="ico">🏭</span> Custodia Equipos</div>
+    <div class="nav-section">Sistema</div>
+    <div class="nav-item" onclick="showPage('config')"><span class="ico">⚙️</span> Configuración</div>
+    <div class="nav-item" onclick="doLogout()"><span class="ico">🚪</span> Cerrar Sesión</div>
+  </nav>
+  <div class="sb-footer">
+    <div id="sb-footer-nombre">TécnicoPRO v1.0</div>
+    <div style="margin-top:2px;">Datos guardados localmente</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2 id="page-title">🏠 Dashboard</h2>
+    </div>
+    <div class="topbar-right">
+      <span id="fecha-top" style="font-size:.75rem;color:var(--texto2);font-weight:600;"></span>
+      <span id="sync-status" style="font-size:.7rem;color:var(--texto2);font-weight:700;background:var(--gris);padding:3px 10px;border-radius:20px;">☁️ Guardado en la nube</span>
+      <span class="badge" id="ordenes-badge">0 pendientes</span>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div id="page-dashboard" class="page active">
+      <div class="kpi-grid">
+        <div class="kpi k-naranja"><h3>Hoy</h3><div class="num" id="dc-hoy">0</div><div class="kpi-sub">Órdenes del día</div></div>
+        <div class="kpi"><h3>En Proceso</h3><div class="num" id="dc-pend">0</div><div class="kpi-sub">Pendientes + proceso</div></div>
+        <div class="kpi k-verde"><h3>Entregadas</h3><div class="num" id="dc-ent">0</div><div class="kpi-sub">Cobradas + entregadas</div></div>
+        <div class="kpi k-cielo"><h3>Clientes</h3><div class="num" id="dc-cli">0</div><div class="kpi-sub">Registrados</div></div>
+        <div class="kpi k-morado"><h3>Facturas</h3><div class="num" id="dc-fact">0</div><div class="kpi-sub">Emitidas con IVA</div></div>
+        <div class="kpi k-rojo"><h3>Custodia</h3><div class="num" id="dc-cust">0</div><div class="kpi-sub">Equipos en local</div></div>
+        <div class="kpi k-morado"><h3>Trabajos Acad.</h3><div class="num" id="dc-acad">0</div><div class="kpi-sub">Registrados</div></div>
+        <div class="kpi k-verde"><h3>Ingresos Mes</h3><div class="num" id="dc-ing" style="font-size:1.4rem;">$0</div><div class="kpi-sub">Caja del mes</div></div>
+      </div>
+      <div class="dash-grid">
+        <div>
+          <div class="panel">
+            <div class="panel-hdr">📋 Últimas Órdenes de Reparación <button class="ph-btn" onclick="showPage('ordenes');abrirModalOrden()">+ Nueva Reparación</button></div>
+            <div class="panel-body" style="padding:0;">
+              <div class="tabla-wrap">
+                <table><thead><tr><th>#</th><th>Cliente</th><th>Equipo</th><th>Estado</th><th>IVA</th><th>Total</th><th>Fecha</th></tr></thead>
+                <tbody id="dash-ordenes-body"></tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-side">
+          <div class="mini-panel">
+            <div class="mp-hdr">🎓 Académicos Recientes <button onclick="showPage('academico')" style="background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:.7rem;font-weight:700;">Ver todos →</button></div>
+            <div class="mp-body" id="dash-academico-rec"><p style="color:#aaa;font-size:.82rem;">Sin trabajos</p></div>
+          </div>
+          <div class="mini-panel">
+            <div class="mp-hdr">⚠️ Stock Bajo</div>
+            <div class="mp-body" id="dash-stock-bajo"><p style="color:#aaa;font-size:.82rem;">Sin alertas ✅</p></div>
+          </div>
+          <div class="mini-panel">
+            <div class="mp-hdr">🛒 Compras Recientes</div>
+            <div class="mp-body" id="dash-compras-rec"><p style="color:#aaa;font-size:.82rem;">Sin compras</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ÓRDENES ═══ -->
+    <div id="page-ordenes" class="page">
+      <div class="panel">
+        <div class="panel-hdr">
+          📋 Órdenes de Reparación — Equipos
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="view-toggle no-print">
+              <button class="view-btn" id="vbtn-cards" onclick="toggleVista('cards')">🃏 Tarjetas</button>
+              <button class="view-btn active" id="vbtn-tabla" onclick="toggleVista('tabla')">📊 Tabla</button>
+            </div>
+            <button class="ph-btn" onclick="abrirModalOrden()">+ Nueva Orden</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-orden" placeholder="🔍 Buscar cliente, equipo, falla..." oninput="filtrarOrdenes()">
+            <select id="filtro-estado" onchange="filtrarOrdenes()">
+              <option value="">Todos los estados</option>
+              <option>Pendiente</option><option>En Proceso</option>
+              <option>Listo</option><option>Entregado</option><option>Cobrado</option>
+            </select>
+            <select id="filtro-tipo-eq" onchange="filtrarOrdenes()">
+              <option value="">Todos los equipos</option>
+              <option>LAPTOP</option><option>PC ESCRITORIO</option><option>IMPRESORA</option>
+              <option>IMPRESORA MULTIFUNCION</option><option>MONITOR</option><option>OTRO</option>
+            </select>
+          </div>
+          <!-- Vista Tabla -->
+          <div id="vista-tabla">
+            <div class="tabla-wrap">
+              <table><thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>Equipo</th><th>Falla</th><th>Estado</th><th>IVA</th><th>Total</th><th>Acciones</th></tr></thead>
+              <tbody id="ordenes-body"></tbody></table>
+            </div>
+          </div>
+          <!-- Vista Cards -->
+          <div id="vista-cards" style="display:none;">
+            <div class="ordenes-kanban" id="ordenes-cards"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ FACTURAS ═══ -->
+    <div id="page-facturas" class="page">
+      <div class="panel">
+        <div class="panel-hdr">🧾 Facturas Emitidas con IVA</div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-fact" placeholder="🔍 Buscar cliente, N° factura..." oninput="filtrarFacturas()">
+          </div>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>Fact.#</th><th>Fecha</th><th>Cliente</th><th>Cédula</th><th>Orden</th><th>Base</th><th>IVA</th><th>Total</th><th>Acc.</th></tr></thead>
+            <tbody id="facturas-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CLIENTES ═══ -->
+    <div id="page-clientes" class="page">
+      <div class="panel">
+        <div class="panel-hdr">👥 Clientes <button class="ph-btn" onclick="abrirModalCliente()">+ Nuevo Cliente</button></div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-cliente" placeholder="🔍 Buscar nombre, cédula, teléfono..." oninput="filtrarClientes()">
+          </div>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>#</th><th>Nombre</th><th>Cédula/RUC</th><th>Teléfono</th><th>Correo</th><th>Órdenes</th><th>Acciones</th></tr></thead>
+            <tbody id="clientes-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STOCK ═══ -->
+    <div id="page-stock" class="page">
+      <div class="panel">
+        <div class="panel-hdr">📦 Inventario de Repuestos y Accesorios <button class="ph-btn" onclick="abrirModalStock()">+ Agregar</button></div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-stock" placeholder="🔍 Buscar repuesto, código..." oninput="filtrarStock()">
+            <select id="filtro-cat" onchange="filtrarStock()">
+              <option value="">Todas las categorías</option>
+              <option>Repuesto</option><option>Accesorio</option><option>Tóner/Tinta</option><option>Herramienta</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Costo</th><th>Precio</th><th>Stock</th><th>Mín.</th><th>Acciones</th></tr></thead>
+            <tbody id="stock-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ COMPRAS ═══ -->
+    <div id="page-compras" class="page">
+      <div class="panel">
+        <div class="panel-hdr">🛒 Compras y Envíos <button class="ph-btn" onclick="abrirModalCompra()">+ Nueva Compra</button></div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-compra" placeholder="🔍 Buscar proveedor, producto..." oninput="filtrarCompras()">
+            <select id="filtro-compra-estado" onchange="filtrarCompras()">
+              <option value="">Todos</option><option>Pedido</option><option>En Tránsito</option><option>Recibido</option>
+            </select>
+          </div>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>#</th><th>Fecha</th><th>Proveedor</th><th>Descripción</th><th>Monto</th><th>Estado</th><th>Guía</th><th>Acciones</th></tr></thead>
+            <tbody id="compras-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CAJA ═══ -->
+    <div id="page-caja" class="page">
+      <div class="panel">
+        <div class="panel-hdr">💰 Caja <button class="ph-btn" onclick="abrirModalCaja()">+ Movimiento</button></div>
+        <div class="panel-body">
+          <div class="caja-resumen">
+            <div class="caja-card ing"><h4>Neto Hoy</h4><div class="monto" id="caja-hoy">$0</div></div>
+            <div class="caja-card ing"><h4>Ingresos Semana</h4><div class="monto" id="caja-sem">$0</div></div>
+            <div class="caja-card ing"><h4>Ingresos Mes</h4><div class="monto" id="caja-mes">$0</div></div>
+            <div class="caja-card egr"><h4>Egresos Mes</h4><div class="monto" id="caja-egresos">$0</div></div>
+          </div>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>Fecha</th><th>Tipo</th><th>Concepto</th><th>Monto</th><th>Referencia</th></tr></thead>
+            <tbody id="caja-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CUSTODIA ═══ -->
+    <div id="page-custodia" class="page">
+      <div class="panel">
+        <div class="panel-hdr">🏭 Custodia de Equipos <button class="ph-btn" onclick="abrirModalCustodia()">+ Registrar</button></div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-custodia" placeholder="🔍 Buscar cliente, equipo..." oninput="filtrarCustodia()">
+            <select id="filtro-custodia-estado" onchange="filtrarCustodia()">
+              <option value="">Todos</option><option>En Custodia</option><option>Notificado</option><option>Retirado</option><option>Dado de Baja</option>
+            </select>
+          </div>
+          <p style="font-size:.73rem;color:var(--texto2);margin-bottom:10px;">🟡 Próximo a vencer (75+ días) &nbsp; 🔴 Dado de Baja (90+ días)</p>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>#</th><th>Foto</th><th>Cliente</th><th>Equipo</th><th>Ingreso</th><th>Días</th><th>Estado</th><th>Vence</th><th>Acciones</th></tr></thead>
+            <tbody id="custodia-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ACADÉMICO ═══ -->
+    <div id="page-academico" class="page">
+      <div class="panel">
+        <div class="panel-hdr">🎓 Trabajos Académicos
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="ph-btn" onclick="abrirModalAcademico()">+ Nuevo Trabajo</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="search-bar">
+            <input type="text" id="buscar-acad" placeholder="🔍 Buscar cliente, tipo de trabajo..." oninput="filtrarAcademico()">
+            <select id="filtro-acad-estado" onchange="filtrarAcademico()">
+              <option value="">Todos</option>
+              <option>Pendiente</option><option>En Proceso</option><option>Listo</option><option>Entregado</option><option>Cobrado</option>
+            </select>
+            <select id="filtro-acad-tipo" onchange="filtrarAcademico()">
+              <option value="">Todos los tipos</option>
+              <option>Tesis</option><option>Monografía</option><option>Ensayo</option><option>Presentación PowerPoint</option>
+              <option>Trabajo de Grado</option><option>Informe</option><option>Proyecto</option><option>Tarea</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="tabla-wrap">
+            <table><thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Tema</th><th>Entrega</th><th>Estado</th><th>Total</th><th>Archivo</th><th>Acciones</th></tr></thead>
+            <tbody id="academico-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CONFIG ═══ -->
+    <div id="page-config" class="page">
+      <div class="panel" style="max-width:720px;">
+        <div class="panel-hdr">⚙️ Configuración del Negocio</div>
+        <div class="panel-body">
+          <div id="cfg-alert-top" class="alert"></div>
+          <div class="form-grid">
+            <div class="form-group"><label>Nombre del Negocio</label><input id="cfg-nombre" placeholder="Ej: WILLISMAR"></div>
+            <div class="form-group"><label>Subtítulo</label><input id="cfg-sub" placeholder="Ej: SERVICIO TÉCNICO & TRABAJOS ACADÉMICOS"></div>
+            <div class="form-group"><label>RUC</label><input id="cfg-ruc" placeholder="0917037038"></div>
+            <div class="form-group"><label>Teléfono</label><input id="cfg-tel" placeholder="0978630009"></div>
+            <div class="form-group"><label>Ciudad</label><input id="cfg-ciudad" placeholder="Bucay, Guayas"></div>
+            <div class="form-group"><label>Correo</label><input id="cfg-correo" placeholder="wepmar10@gmail.com"></div>
+            <div class="form-group"><label>IVA (%)</label><input id="cfg-iva" type="number" value="15" min="0" max="100"></div>
+            <div class="form-group"><label>Clave de acceso</label><input id="cfg-clave" type="password" placeholder="Dejar vacío = no cambiar"></div>
+          </div>
+          <div class="form-group form-full" style="margin-top:12px;">
+            <label>Datos para QR de Firma <span style="font-weight:400;color:var(--texto2);">(aparece en los comprobantes PDF)</span></label>
+            <textarea id="cfg-qr" rows="3" placeholder="ej: WILLISMAR | Tel: 0978630009 | Bucay, Guayas | wepmar10@gmail.com" style="margin-top:4px;border:2px solid var(--gris2);border-radius:9px;padding:9px 12px;font-size:.85rem;font-family:var(--font);width:100%;resize:vertical;"></textarea>
+            <p style="font-size:.7rem;color:var(--texto2);margin-top:4px;">💡 Este texto se convierte en un código QR que aparece entre las firmas del comprobante. Escribe los datos de contacto de tu negocio.</p>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="guardarConfig()">💾 Guardar Configuración</button>
+          </div>
+          <hr style="margin:22px 0;border:none;border-top:1px solid var(--gris2);">
+          <div id="backup-alert" class="alert"></div>
+          <h4 style="font-size:.85rem;font-weight:800;margin-bottom:12px;">💾 Respaldo de Datos</h4>
+          <div class="btn-group">
+            <button class="btn btn-verde" onclick="respaldarDatos()">⬇️ Descargar Respaldo</button>
+            <label class="btn btn-ghost" style="cursor:pointer;">📂 Restaurar Datos <input type="file" accept=".json" style="display:none;" onchange="restaurarDatos(event)"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ══════════════ MODALES ══════════════ -->
+
+<!-- MODAL ORDEN -->
+<div class="modal-overlay" id="modal-orden">
+<div class="modal" style="max-width:800px;">
+  <div class="modal-hdr"><h3>🔧 <span id="modal-ord-titulo">Nueva Orden de Trabajo</span></h3><button class="modal-close" onclick="cerrarModal('modal-orden')">×</button></div>
+  <div class="modal-body">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('tab-datos','tab-items',this)">📋 Datos del Equipo</div>
+      <div class="tab" onclick="switchTab('tab-items','tab-datos',this)">🔩 Ítems / Repuestos</div>
+    </div>
+    <div id="tab-datos">
+      <div class="form-grid">
+        <div class="form-group"><label>Cliente *</label><select id="ord-cliente"><option value="">-- Seleccionar --</option></select></div>
+        <div class="form-group"><label>Estado</label>
+          <select id="ord-estado"><option>Pendiente</option><option>En Proceso</option><option>Listo</option><option>Entregado</option><option>Cobrado</option></select>
+        </div>
+        <div class="form-group"><label>Tipo Equipo</label>
+          <select id="ord-tipo">
+            <option>LAPTOP</option><option>PC ESCRITORIO</option><option>IMPRESORA</option>
+            <option>IMPRESORA MULTIFUNCION</option><option>MONITOR</option><option>TABLET</option><option>CELULAR</option><option>OTRO</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Marca</label><input id="ord-marca" placeholder="HP, DELL, CANON, EPSON..."></div>
+        <div class="form-group"><label>Modelo</label><input id="ord-modelo" placeholder="ej. Pavilion 15, L3150"></div>
+        <div class="form-group"><label>Nº Serie</label><input id="ord-serie" placeholder="Opcional"></div>
+        <div class="form-group"><label>Forma de Pago</label>
+          <select id="ord-pago"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option></select>
+        </div>
+        <div class="form-group form-full"><label>Falla Reportada</label><input id="ord-falla" placeholder="Describe la falla que reporta el cliente"></div>
+        <div class="form-group form-full"><label>Observaciones</label><textarea id="ord-obs" rows="2" placeholder="Accesorios recibidos, condición del equipo, accesorios..."></textarea></div>
+      </div>
+    </div>
+    <div id="tab-items" style="display:none;">
+      <div class="items-area">
+        <table id="tbl-items">
+          <thead><tr><th style="width:35%">Servicio / Repuesto</th><th style="width:13%">Código</th><th style="width:15%">P.Unit ($)</th><th style="width:10%">Cant.</th><th style="width:15%">Subtotal</th><th style="width:12%">Acc.</th></tr></thead>
+          <tbody id="items-body"></tbody>
+        </table>
+        <button class="btn btn-sm btn-primary no-print" style="margin-top:8px;" onclick="addItemRow()">+ Agregar línea</button>
+      </div>
+      <div class="totales-box">
+        <div class="fila"><span>Subtotal:</span><strong id="tot-sub">$0.00</strong></div>
+        <div class="fila" id="fila-iva" style="display:none;"><span id="lbl-iva">IVA (15%):</span><strong id="tot-iva">$0.00</strong></div>
+        <div class="fila total"><span>TOTAL:</span><span id="tot-total">$0.00</span></div>
+      </div>
+      <div class="iva-opt-box">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;font-size:.85rem;color:var(--azul);">
+          <input type="checkbox" id="ord-factura" onchange="toggleFactura()"> 🧾 Cliente pide factura con IVA
+        </label>
+        <div id="factura-opts" style="display:none;">
+          <p style="font-size:.75rem;color:var(--texto2);margin:10px 0 8px;">¿Cómo manejar el IVA?</p>
+          <div class="iva-radio-group">
+            <label class="iva-radio-label"><input type="radio" name="iva-modo" value="agregar" checked onchange="calcularTotales()"><span><strong>Agregar IVA</strong><br><small style="color:#888;">$100 + 15% = $115</small></span></label>
+            <label class="iva-radio-label"><input type="radio" name="iva-modo" value="incluido" onchange="calcularTotales()"><span><strong>IVA incluido</strong><br><small style="color:#888;">$100 ya incluye IVA</small></span></label>
+          </div>
+          <div id="resumen-iva" style="margin-top:10px;padding:8px 12px;background:#fff;border-radius:8px;font-size:.79rem;color:var(--texto2);border:1.5px solid var(--gris2);">
+            <span id="resumen-iva-txt">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" onclick="guardarOrden()">💾 Guardar Orden</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-orden')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL FACTURA -->
+<div class="modal-overlay" id="modal-ver-factura">
+<div class="modal" style="max-width:640px;">
+  <div class="modal-hdr"><h3>🧾 Factura</h3><button class="modal-close" onclick="cerrarModal('modal-ver-factura')">×</button></div>
+  <div class="modal-body" id="factura-contenido"></div>
+  <div class="modal-footer">
+    <button class="btn btn-primary no-print" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-ver-factura')">Cerrar</button>
+  </div>
+</div></div>
+
+<!-- MODAL CLIENTE -->
+<div class="modal-overlay" id="modal-cliente">
+<div class="modal" style="max-width:540px;">
+  <div class="modal-hdr"><h3>👥 <span id="modal-cli-titulo">Nuevo Cliente</span></h3><button class="modal-close" onclick="cerrarModal('modal-cliente')">×</button></div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Nombre Completo *</label><input id="cli-nombre" placeholder="Nombre completo"></div>
+      <div class="form-group"><label>Cédula / RUC</label><input id="cli-id" placeholder="0604XXXXXXX"></div>
+      <div class="form-group"><label>Teléfono</label><input id="cli-tel" placeholder="09XX-XXX-XXX"></div>
+      <div class="form-group"><label>Correo</label><input id="cli-correo" placeholder="correo@ejemplo.com"></div>
+      <div class="form-group form-full"><label>Dirección</label><input id="cli-dir" placeholder="Ciudad, barrio, referencia..."></div>
+      <div class="form-group form-full"><label>Notas</label><textarea id="cli-notas" rows="2" placeholder="Notas adicionales..."></textarea></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" onclick="guardarCliente()">💾 Guardar</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-cliente')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL STOCK -->
+<div class="modal-overlay" id="modal-stock">
+<div class="modal" style="max-width:540px;">
+  <div class="modal-hdr"><h3>📦 <span id="modal-stk-titulo">Agregar Repuesto</span></h3><button class="modal-close" onclick="cerrarModal('modal-stock')">×</button></div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Código</label><input id="stk-cod" placeholder="ej. REP-001"></div>
+      <div class="form-group"><label>Categoría</label>
+        <select id="stk-cat"><option>Repuesto</option><option>Accesorio</option><option>Tóner/Tinta</option><option>Herramienta</option><option>Otro</option></select>
+      </div>
+      <div class="form-group form-full"><label>Descripción *</label><input id="stk-desc" placeholder="Nombre del repuesto o accesorio"></div>
+      <div class="form-group"><label>Precio Costo ($)</label><input id="stk-costo" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="form-group"><label>Precio Venta ($)</label><input id="stk-precio" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="form-group"><label>Stock Actual</label><input id="stk-qty" type="number" min="0" value="0"></div>
+      <div class="form-group"><label>Stock Mínimo</label><input id="stk-min" type="number" min="0" value="2"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" onclick="guardarStock()">💾 Guardar</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-stock')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL COMPRA -->
+<div class="modal-overlay" id="modal-compra">
+<div class="modal" style="max-width:640px;">
+  <div class="modal-hdr"><h3>🛒 <span id="modal-cmp-titulo">Nueva Compra</span></h3><button class="modal-close" onclick="cerrarModal('modal-compra')">×</button></div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Proveedor *</label><input id="cmp-proveedor" placeholder="Nombre tienda o proveedor"></div>
+      <div class="form-group"><label>Fecha</label><input id="cmp-fecha" type="date"></div>
+      <div class="form-group form-full"><label>Producto(s) / Descripción</label><textarea id="cmp-desc" rows="3" placeholder="Lista de productos, referencias, etc."></textarea></div>
+      <div class="form-group"><label>Monto Total ($)</label><input id="cmp-monto" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="form-group"><label>Forma de Pago</label><select id="cmp-pago"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Crédito</option></select></div>
+      <div class="form-group"><label>Estado</label><select id="cmp-estado"><option>Pedido</option><option>En Tránsito</option><option>Recibido</option></select></div>
+    </div>
+    <div class="envio-box">
+      <h4>📦 Envío Servientrega (opcional)</h4>
+      <div class="form-grid" style="margin-top:6px;">
+        <div class="form-group"><label>Código de Guía</label><input id="cmp-guia" placeholder="ej. 9876543210" oninput="actualizarLinkGuia()"></div>
+        <div class="form-group"><label>Observaciones Envío</label><input id="cmp-envio-obs" placeholder="Fecha estimada, origen..."></div>
+      </div>
+      <div style="margin-top:10px;" id="guia-link-wrap" style="display:none;">
+        <a id="guia-link" class="guia-link" target="_blank" href="#">🔍 Rastrear en Servientrega</a>
+      </div>
+    </div>
+    <div class="form-group form-full" style="margin-top:12px;"><label>Notas</label><textarea id="cmp-notas" rows="2" placeholder="Notas adicionales..."></textarea></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" onclick="guardarCompra()">💾 Guardar</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-compra')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL CAJA -->
+<div class="modal-overlay" id="modal-caja">
+<div class="modal" style="max-width:440px;">
+  <div class="modal-hdr"><h3>💰 Movimiento de Caja</h3><button class="modal-close" onclick="cerrarModal('modal-caja')">×</button></div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Tipo</label><select id="caja-tipo"><option value="Ingreso">Ingreso</option><option value="Egreso">Egreso</option></select></div>
+      <div class="form-group"><label>Monto ($)</label><input id="caja-monto" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="form-group form-full"><label>Concepto</label><input id="caja-concepto" placeholder="ej. Reparación laptop / Compra tóner..."></div>
+      <div class="form-group"><label>Referencia</label><input id="caja-ref" placeholder="N° orden, factura..."></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-verde" onclick="guardarCaja()">💾 Guardar</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-caja')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL CUSTODIA -->
+<div class="modal-overlay" id="modal-custodia">
+<div class="modal" style="max-width:640px;">
+  <div class="modal-hdr"><h3>🏭 <span id="modal-cust-titulo">Registrar Equipo en Custodia</span></h3><button class="modal-close" onclick="cerrarModal('modal-custodia')">×</button></div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Cliente</label><select id="cust-cliente"><option value="">-- Seleccionar --</option></select></div>
+      <div class="form-group"><label>Tipo Equipo</label>
+        <select id="cust-tipo"><option>LAPTOP</option><option>PC ESCRITORIO</option><option>IMPRESORA</option><option>IMPRESORA MULTIFUNCION</option><option>MONITOR</option><option>TABLET</option><option>CELULAR</option><option>OTRO</option></select>
+      </div>
+      <div class="form-group"><label>Marca</label><input id="cust-marca" placeholder="HP, CANON..."></div>
+      <div class="form-group"><label>Modelo</label><input id="cust-modelo" placeholder="ej. 4650"></div>
+      <div class="form-group"><label>Serie</label><input id="cust-serie"></div>
+      <div class="form-group"><label>Estado del Equipo</label><select id="cust-estado-eq"><option>En Custodia</option><option>Notificado</option><option>Retirado</option><option>Dado de Baja</option></select></div>
+      <div class="form-group"><label>Fecha Ingreso</label><input id="cust-fecha" type="date"></div>
+      <div class="form-group"><label>Orden de Referencia</label><input id="cust-orden-ref" placeholder="# Orden relacionada"></div>
+      <div class="form-group form-full"><label>Foto del Equipo</label><input id="cust-foto" type="file" accept="image/*"></div>
+      <div class="form-group form-full"><label>Observaciones</label><textarea id="cust-obs" rows="2" placeholder="Estado, accesorios, notas..."></textarea></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" onclick="guardarCustodia()">💾 Guardar</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-custodia')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL ACADÉMICO -->
+<div class="modal-overlay" id="modal-academico">
+<div class="modal" style="max-width:700px;">
+  <div class="modal-hdr"><h3>🎓 <span id="modal-acad-titulo">Nuevo Trabajo Académico</span></h3><button class="modal-close" onclick="cerrarModal('modal-academico')">×</button></div>
+  <div class="modal-body">
+    <div class="form-grid">
+      <div class="form-group"><label>Cliente *</label><select id="acad-cliente"><option value="">-- Seleccionar --</option></select></div>
+      <div class="form-group"><label>Estado</label>
+        <select id="acad-estado"><option>Pendiente</option><option>En Proceso</option><option>Listo</option><option>Entregado</option><option>Cobrado</option></select>
+      </div>
+      <div class="form-group"><label>Tipo de Trabajo *</label>
+        <select id="acad-tipo">
+          <option>Tesis</option><option>Monografía</option><option>Ensayo</option><option>Presentación PowerPoint</option>
+          <option>Trabajo de Grado</option><option>Informe</option><option>Proyecto</option><option>Tarea</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Fecha Entrega</label><input id="acad-fecha-entrega" type="date"></div>
+      <div class="form-group form-full"><label>Tema / Título del Trabajo *</label><input id="acad-tema" placeholder="Ej: Impacto de las redes sociales en jóvenes universitarios"></div>
+      <div class="form-group"><label>Universidad / Institución</label><input id="acad-universidad" placeholder="Ej: ESPOCH, UNACH..."></div>
+      <div class="form-group"><label>Materia / Carrera</label><input id="acad-materia" placeholder="Ej: Administración de Empresas"></div>
+      <div class="form-group"><label>Páginas / Diapositivas</label><input id="acad-paginas" type="number" min="1" placeholder="Ej: 30"></div>
+      <div class="form-group"><label>Precio ($)</label><input id="acad-precio" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcularTotalAcad()"></div>
+      <div class="form-group"><label>Anticipo ($)</label><input id="acad-anticipo" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcularTotalAcad()"></div>
+      <div class="form-group"><label>Forma de Pago</label>
+        <select id="acad-pago"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option></select>
+      </div>
+      <div class="form-group form-full"><label>Instrucciones / Requisitos</label><textarea id="acad-instrucciones" rows="3" placeholder="Normas APA, número de referencias, especificaciones del docente..."></textarea></div>
+      <div class="form-group form-full"><label>Observaciones</label><textarea id="acad-obs" rows="2" placeholder="Notas internas..."></textarea></div>
+    </div>
+    <div style="margin-top:14px;padding:14px;background:#faf5ff;border:2px solid #c4b5fd;border-radius:12px;">
+      <h4 style="font-size:.82rem;font-weight:800;color:#5b21b6;margin-bottom:12px;">📁 Archivo del Trabajo Terminado</h4>
+      <p style="font-size:.75rem;color:var(--texto2);margin-bottom:10px;">Sube aquí el trabajo cuando esté listo para descargarlo cuando necesites.</p>
+      <div class="file-upload-box" id="acad-upload-box" onclick="document.getElementById('acad-archivo').click()">
+        <div id="acad-upload-label">📄 Clic para subir el archivo (Word, PDF, PPT, ZIP...)</div>
+        <input type="file" id="acad-archivo" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar,.xls,.xlsx" style="display:none;" onchange="actualizarArchivoAcad(this)">
+      </div>
+      <div id="acad-archivo-actual" style="display:none;margin-top:8px;padding:8px 12px;background:#ede9fe;border-radius:8px;font-size:.79rem;color:#5b21b6;display:flex;align-items:center;justify-content:space-between;">
+        <span id="acad-archivo-nombre">—</span>
+        <button onclick="limpiarArchivoAcad()" style="background:none;border:none;cursor:pointer;color:#7c3aed;font-weight:800;font-size:.85rem;">✕ Quitar</button>
+      </div>
+    </div>
+    <div style="background:var(--gris);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:.82rem;color:var(--texto2);">Saldo pendiente:</span>
+      <strong id="acad-saldo" style="font-size:1.1rem;color:var(--azul);">$0.00</strong>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" onclick="guardarAcademico()">💾 Guardar</button>
+    <button class="btn btn-ghost" onclick="cerrarModal('modal-academico')">Cancelar</button>
+  </div>
+</div></div>
+
+<div class="modal-overlay" id="modal-foto">
+<div class="modal" style="max-width:440px;text-align:center;">
+  <div class="modal-hdr"><h3>📷 Foto del Equipo</h3><button class="modal-close" onclick="cerrarModal('modal-foto')">×</button></div>
+  <div class="modal-body"><img id="foto-grande" src="" style="max-width:100%;border-radius:10px;"></div>
+</div></div>
+
+<!-- OVERLAY MENÚ MÁS -->
+<div id="mobile-more-overlay" onclick="cerrarMobileMore()"></div>
+
+<!-- MENÚ MÁS (módulos secundarios) -->
+<div id="mobile-more-menu">
+  <div style="text-align:center;margin-bottom:12px;">
+    <span style="color:rgba(255,255,255,.3);font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;">Más módulos</span>
+  </div>
+  <div class="more-grid">
+    <button class="more-item" onclick="showPageMobile('facturas')"><span class="mico2">🧾</span>Facturas</button>
+    <button class="more-item" onclick="showPageMobile('stock')"><span class="mico2">📦</span>Inventario</button>
+    <button class="more-item" onclick="showPageMobile('compras')"><span class="mico2">🛒</span>Compras</button>
+    <button class="more-item" onclick="showPageMobile('config')"><span class="mico2">⚙️</span>Config</button>
+    <button class="more-item" onclick="doLogout()"><span class="mico2">🚪</span>Salir</button>
+  </div>
+</div>
+
+<!-- BARRA INFERIOR MÓVIL -->
+<div id="mobile-nav">
+  <div class="mnav-items">
+    <button class="mnav-btn active" id="mnav-dashboard" onclick="showPageMobile('dashboard')">
+      <span class="mico">🏠</span>Inicio
+    </button>
+    <button class="mnav-btn" id="mnav-ordenes" onclick="showPageMobile('ordenes')">
+      <span class="mico">🔧</span>Equipos
+    </button>
+    <button class="mnav-btn" id="mnav-academico" onclick="showPageMobile('academico')">
+      <span class="mico">🎓</span>Académico
+    </button>
+    <button class="mnav-btn" id="mnav-clientes" onclick="showPageMobile('clientes')">
+      <span class="mico">👥</span>Clientes
+    </button>
+    <button class="mnav-btn" id="mnav-caja" onclick="showPageMobile('caja')">
+      <span class="mico">💰</span>Caja
+    </button>
+    <button class="mnav-btn" id="mnav-custodia" onclick="showPageMobile('custodia')">
+      <span class="mico">🏭</span>Custodia
+    </button>
+    <button class="mnav-btn" id="mnav-more" onclick="toggleMobileMore()">
+      <span class="mico">⋯</span>Más
+    </button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+const IVA_DEFAULT = 15;
+
+// ─── FIREBASE ──────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyAUvMWFnuaNXmyh7rjvLPNgjtiS0qQWYGM",
+  authDomain: "tecnico-pro.firebaseapp.com",
+  projectId: "tecnico-pro",
+  storageBucket: "tecnico-pro.firebasestorage.app",
+  messagingSenderId: "883534120062",
+  appId: "1:883534120062:web:72b5343763fd1d3582442f"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const FB_DOC = 'willismar';
+
+// ─── STORE (localStorage + Firebase) ──────────────────────────────────────
+const STORE = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch{ return []; } },
+  set(k,v){ localStorage.setItem(k,JSON.stringify(v)); fbSave(); },
+  getObj(k,def={}){ try{ return JSON.parse(localStorage.getItem(k)||JSON.stringify(def)); }catch{ return def; } },
+  setObj(k,v){ localStorage.setItem(k,JSON.stringify(v)); fbSave(); }
+};
+
+function fbSave(){
+  db.collection('tecnico-pro').doc(FB_DOC).set({
+    ordenes, clientes, stock, compras, facturas, caja, custodia, academico, config,
+    updated: new Date().toISOString()
+  }).then(()=>{
+    mostrarSyncStatus('☁️ Guardado en la nube');
+  }).catch(e=>{ console.warn('Firebase save error:',e); });
+}
+
+function fbLoad(){
+  mostrarSyncStatus('⏳ Sincronizando con la nube...');
+  db.collection('tecnico-pro').doc(FB_DOC).get().then(snap=>{
+    if(snap.exists){
+      const d = snap.data();
+      if(d.ordenes)  { ordenes=d.ordenes;     localStorage.setItem('tp_ordenes',JSON.stringify(ordenes)); }
+      if(d.clientes) { clientes=d.clientes;   localStorage.setItem('tp_clientes',JSON.stringify(clientes)); }
+      if(d.stock)    { stock=d.stock;         localStorage.setItem('tp_stock',JSON.stringify(stock)); }
+      if(d.compras)  { compras=d.compras;     localStorage.setItem('tp_compras',JSON.stringify(compras)); }
+      if(d.facturas) { facturas=d.facturas;   localStorage.setItem('tp_facturas',JSON.stringify(facturas)); }
+      if(d.caja)     { caja=d.caja;           localStorage.setItem('tp_caja',JSON.stringify(caja)); }
+      if(d.custodia) { custodia=d.custodia;   localStorage.setItem('tp_custodia',JSON.stringify(custodia)); }
+      if(d.academico){ academico=d.academico; localStorage.setItem('tp_academico',JSON.stringify(academico)); }
+      if(d.config)   { config=d.config;       localStorage.setItem('tp_config',JSON.stringify(config)); }
+      actualizarNombreUI();
+      actualizarDashboard();
+      mostrarSyncStatus('☁️ Datos sincronizados');
+    } else {
+      mostrarSyncStatus('☁️ Nube lista');
+    }
+  }).catch(e=>{
+    mostrarSyncStatus('⚠️ Sin conexión — datos locales');
+    console.warn('Firebase load error:',e);
+  });
+}
+
+function mostrarSyncStatus(msg){
+  const el = document.getElementById('sync-status');
+  if(el) el.textContent = msg;
+}
+
+// ─── DATOS ─────────────────────────────────────────────────────────────────
+let ordenes  = STORE.get('tp_ordenes');
+let clientes = STORE.get('tp_clientes');
+let stock    = STORE.get('tp_stock');
+let compras  = STORE.get('tp_compras');
+let facturas = STORE.get('tp_facturas');
+let caja     = STORE.get('tp_caja');
+let custodia = STORE.get('tp_custodia');
+let config   = STORE.getObj('tp_config', {
+  nombre:'TécnicoPRO', sub:'Servicio Técnico & Trabajos Académicos', ruc:'', tel:'', ciudad:'Ecuador', correo:'', iva:15, qr:'', clave:'1234'
+});
+let academico = STORE.get('tp_academico');
+let editIdx  = {orden:null,cliente:null,stock:null,compra:null,custodia:null,academico:null};
+let vistaOrdenes = 'tabla';
+
+// ─── LOGIN ──────────────────────────────────────────────────────────────────
+function doLogin(){
+  const pass = document.getElementById('login-pass').value;
+  const claveGuardada = config.clave || '1234';
+  if(pass === claveGuardada){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    sessionStorage.setItem('tp_auth','1');
+    actualizarNombreUI();
+    actualizarDashboard();
+    fbLoad();
+  } else {
+    const inp = document.getElementById('login-pass');
+    const err = document.getElementById('login-error');
+    inp.classList.add('error');
+    err.style.display='block';
+    inp.value='';
+    setTimeout(()=>{ inp.classList.remove('error'); err.style.display='none'; },2000);
+  }
+}
+function doLogout(){ sessionStorage.removeItem('tp_auth'); location.reload(); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('fecha-top').textContent = new Date().toLocaleDateString('es-EC',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  actualizarNombreUI();
+  if(sessionStorage.getItem('tp_auth')==='1'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    actualizarDashboard();
+    fbLoad();
+  }
+  document.getElementById('login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('show'); }));
+});
+
+function actualizarNombreUI(){
+  const n = config.nombre || 'TécnicoPRO';
+  const s = config.sub || 'Servicio Técnico · PCs · Laptops · Impresoras';
+  document.getElementById('sb-nombre').textContent = n;
+  document.getElementById('sb-slogan').textContent = s;
+  document.getElementById('cfg-login-nombre').textContent = n;
+  document.getElementById('sb-footer-nombre').textContent = n + ' v3.0';
+}
+
+// ─── NAVEGACIÓN ─────────────────────────────────────────────────────────────
+function toggleSubMenu(id){
+  const sub = document.getElementById(id);
+  const arrow = document.getElementById('arrow-'+id);
+  const parent = sub.previousElementSibling;
+  const isOpen = sub.classList.contains('open');
+  sub.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+  parent.classList.toggle('sub-active', !isOpen);
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const el = document.querySelector(`.nav-item[onclick="showPage('${id}')"]`);
+  if(el) el.classList.add('active');
+  // Abrir submenú automáticamente si es una sub-página
+  if(id==='ordenes'||id==='academico'){
+    const sub = document.getElementById('sub-ordenes');
+    const arrow = document.getElementById('arrow-sub-ordenes');
+    const parent = sub ? sub.previousElementSibling : null;
+    if(sub) sub.classList.add('open');
+    if(arrow) arrow.classList.add('open');
+    if(parent) parent.classList.add('sub-active');
+  }
+  const titles={
+    dashboard:'🏠 Dashboard',ordenes:'🔧 Órdenes de Reparación',facturas:'🧾 Facturas / IVA',
+    clientes:'👥 Clientes',stock:'📦 Inventario',compras:'🛒 Compras / Envíos',
+    caja:'💰 Caja',custodia:'🏭 Custodia de Equipos',academico:'🎓 Trabajos Académicos',config:'⚙️ Configuración'
+  };
+  document.getElementById('page-title').textContent = titles[id]||id;
+  if(id==='ordenes') renderOrdenes();
+  if(id==='clientes') renderClientes();
+  if(id==='stock') renderStock();
+  if(id==='compras') renderCompras();
+  if(id==='caja') renderCaja();
+  if(id==='custodia') renderCustodia();
+  if(id==='facturas') renderFacturas();
+  if(id==='academico') renderAcademico();
+  if(id==='config') cargarConfig();
+}
+
+function abrirModal(id){ document.getElementById(id).classList.add('show'); }
+function cerrarModal(id){ document.getElementById(id).classList.remove('show'); }
+
+function switchTab(show,hide,el){
+  document.getElementById(show).style.display='block';
+  document.getElementById(hide).style.display='none';
+  document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleVista(v){
+  vistaOrdenes=v;
+  document.getElementById('vista-tabla').style.display = v==='tabla'?'block':'none';
+  document.getElementById('vista-cards').style.display = v==='cards'?'block':'none';
+  document.getElementById('vbtn-tabla').classList.toggle('active', v==='tabla');
+  document.getElementById('vbtn-cards').classList.toggle('active', v==='cards');
+  renderOrdenes();
+}
+
+function hoy(){ return new Date().toISOString().split('T')[0]; }
+
+function estadoBadge(e){
+  const cls={'Pendiente':'est-pendiente','En Proceso':'est-proceso','Listo':'est-listo','Entregado':'est-entregado','Cobrado':'est-cobrado'};
+  return `<span class="est-badge ${cls[e]||''}">${e}</span>`;
+}
+
+function llenarSelectClientes(sid){
+  const s=document.getElementById(sid);
+  const val=s.value;
+  s.innerHTML='<option value="">-- Seleccionar --</option>';
+  [...clientes].sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'))
+    .forEach(c=>{ s.innerHTML+=`<option value="${c.id}">${c.nombre}</option>`; });
+  if(val) s.value=val;
+}
+
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
+function cargarConfig(){
+  document.getElementById('cfg-nombre').value  = config.nombre||'';
+  document.getElementById('cfg-sub').value     = config.sub||'';
+  document.getElementById('cfg-ruc').value     = config.ruc||'';
+  document.getElementById('cfg-tel').value     = config.tel||'';
+  document.getElementById('cfg-ciudad').value  = config.ciudad||'';
+  document.getElementById('cfg-correo').value  = config.correo||'';
+  document.getElementById('cfg-iva').value     = config.iva||15;
+  document.getElementById('cfg-qr').value      = config.qr||'';
+}
+
+function guardarConfig(){
+  const nuevaClave = document.getElementById('cfg-clave').value;
+  config = {
+    nombre:  document.getElementById('cfg-nombre').value,
+    sub:     document.getElementById('cfg-sub').value,
+    ruc:     document.getElementById('cfg-ruc').value,
+    tel:     document.getElementById('cfg-tel').value,
+    ciudad:  document.getElementById('cfg-ciudad').value,
+    correo:  document.getElementById('cfg-correo').value,
+    iva:     parseFloat(document.getElementById('cfg-iva').value)||15,
+    qr:      document.getElementById('cfg-qr').value,
+    clave:   nuevaClave ? nuevaClave : (config.clave||'1234'),
+  };
+  STORE.setObj('tp_config',config);
+  actualizarNombreUI();
+  const a=document.getElementById('cfg-alert-top');
+  a.className='alert alert-success show'; a.textContent='✅ Configuración guardada correctamente.';
+  setTimeout(()=>a.className='alert',3000);
+}
+
+// ─── ÓRDENES ────────────────────────────────────────────────────────────────
+function abrirModalOrden(idx=null){
+  editIdx.orden=idx;
+  document.getElementById('modal-ord-titulo').textContent = idx!==null?'Editar Orden':'Nueva Orden de Trabajo';
+  llenarSelectClientes('ord-cliente');
+  document.getElementById('items-body').innerHTML='';
+  document.getElementById('ord-factura').checked=false;
+  document.getElementById('factura-opts').style.display='none';
+  document.getElementById('fila-iva').style.display='none';
+  if(idx!==null){
+    const o=ordenes[idx];
+    document.getElementById('ord-cliente').value=o.clienteId||'';
+    document.getElementById('ord-estado').value=o.estado||'Pendiente';
+    document.getElementById('ord-tipo').value=o.tipo||'LAPTOP';
+    document.getElementById('ord-marca').value=o.marca||'';
+    document.getElementById('ord-modelo').value=o.modelo||'';
+    document.getElementById('ord-serie').value=o.serie||'';
+    document.getElementById('ord-falla').value=o.falla||'';
+    document.getElementById('ord-obs').value=o.obs||'';
+    document.getElementById('ord-pago').value=o.pago||'Efectivo';
+    (o.items||[]).forEach(it=>addItemRow(it));
+    if(o.conFactura){ document.getElementById('ord-factura').checked=true; toggleFactura(); }
+    calcularTotales();
+  } else {
+    ['ord-marca','ord-modelo','ord-serie','ord-falla','ord-obs'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('ord-estado').value='Pendiente';
+    addItemRow();
+    calcularTotales();
+  }
+  switchTab('tab-datos','tab-items',document.querySelector('.tabs .tab'));
+  abrirModal('modal-orden');
+}
+
+function addItemRow(item=null){
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td><input type="text" value="${item?item.desc:''}" placeholder="Servicio o repuesto"></td>
+    <td><input type="text" value="${item?item.cod:''}" placeholder="Código"></td>
+    <td><input type="number" min="0" step="0.01" value="${item?item.precio:''}" placeholder="0.00" oninput="calcularTotales()"></td>
+    <td><input type="number" min="1" value="${item?item.cant:1}" oninput="calcularTotales()"></td>
+    <td class="subtotal-cell">$0.00</td>
+    <td><button class="btn btn-rojo btn-sm" onclick="this.closest('tr').remove();calcularTotales()">✕</button></td>`;
+  document.getElementById('items-body').appendChild(tr);
+  if(item) calcularTotales();
+}
+
+function calcularTotales(){
+  let sub=0;
+  document.querySelectorAll('#items-body tr').forEach(r=>{
+    const inputs=r.querySelectorAll('input');
+    const pu=parseFloat(inputs[2].value||0);
+    const qty=parseInt(inputs[3].value||1);
+    const s=Math.round(pu*qty*100)/100;
+    r.querySelector('.subtotal-cell').textContent='$'+s.toFixed(2);
+    sub+=s;
+  });
+  const ivaPct=(config.iva||15)/100;
+  const tieneFactura=document.getElementById('ord-factura').checked;
+  const modo=document.querySelector('input[name="iva-modo"]:checked')?.value||'agregar';
+  let base=sub, ivaAmt=0, total=sub;
+  if(tieneFactura){
+    if(modo==='agregar'){
+      base=sub; ivaAmt=Math.round(sub*ivaPct*100)/100; total=Math.round((sub+ivaAmt)*100)/100;
+      document.getElementById('resumen-iva-txt').innerHTML=`Base: <strong>$${base.toFixed(2)}</strong> + IVA: <strong>$${ivaAmt.toFixed(2)}</strong> = Total: <strong>$${total.toFixed(2)}</strong>`;
+    } else {
+      base=Math.round(sub/(1+ivaPct)*100)/100; ivaAmt=Math.round((sub-base)*100)/100; total=sub;
+      document.getElementById('resumen-iva-txt').innerHTML=`Precio incluye IVA → Base: <strong>$${base.toFixed(2)}</strong> + IVA: <strong>$${ivaAmt.toFixed(2)}</strong> = Total: <strong>$${total.toFixed(2)}</strong>`;
+    }
+    document.getElementById('fila-iva').style.display='flex';
+    document.getElementById('lbl-iva').textContent=`IVA (${config.iva||15}%):`;
+    document.getElementById('tot-iva').textContent='$'+ivaAmt.toFixed(2);
+  } else {
+    document.getElementById('fila-iva').style.display='none';
+  }
+  document.getElementById('tot-sub').textContent='$'+base.toFixed(2);
+  document.getElementById('tot-total').textContent='$'+total.toFixed(2);
+}
+
+function toggleFactura(){
+  const checked=document.getElementById('ord-factura').checked;
+  document.getElementById('factura-opts').style.display=checked?'block':'none';
+  calcularTotales();
+}
+
+function guardarOrden(){
+  const cId=document.getElementById('ord-cliente').value;
+  if(!cId){ alert('Selecciona un cliente'); return; }
+  const cli=clientes.find(c=>c.id===cId);
+  const rows=document.querySelectorAll('#items-body tr');
+  const items=[];
+  rows.forEach(r=>{
+    const inputs=r.querySelectorAll('input');
+    const desc=inputs[0].value; const cod=inputs[1].value;
+    const pu=parseFloat(inputs[2].value||0); const qty=parseInt(inputs[3].value||1);
+    if(desc) items.push({desc,cod,precio:pu,cant:qty});
+  });
+  const rawSub=items.reduce((a,i)=>a+Math.round(i.precio*i.cant*100)/100,0);
+  const ivaPct=(config.iva||15)/100;
+  const tieneFactura=document.getElementById('ord-factura').checked;
+  const modo=document.querySelector('input[name="iva-modo"]:checked')?.value||'agregar';
+  let base=rawSub, ivaAmt=0, total=rawSub;
+  if(tieneFactura){
+    if(modo==='agregar'){ base=rawSub; ivaAmt=Math.round(rawSub*ivaPct*100)/100; total=Math.round((rawSub+ivaAmt)*100)/100; }
+    else { base=Math.round(rawSub/(1+ivaPct)*100)/100; ivaAmt=Math.round((rawSub-base)*100)/100; total=rawSub; }
+  }
+  const orden={
+    num: editIdx.orden!==null ? ordenes[editIdx.orden].num : (ordenes.length+1).toString().padStart(4,'0'),
+    fecha:hoy(), clienteId:cId, clienteNombre:cli?.nombre||'',
+    tipo:document.getElementById('ord-tipo').value,
+    marca:document.getElementById('ord-marca').value,
+    modelo:document.getElementById('ord-modelo').value,
+    serie:document.getElementById('ord-serie').value,
+    falla:document.getElementById('ord-falla').value,
+    obs:document.getElementById('ord-obs').value,
+    estado:document.getElementById('ord-estado').value,
+    pago:document.getElementById('ord-pago').value,
+    items, base, ivaAmt, total, conFactura:tieneFactura, ivaModo:modo,
+    facturaId: editIdx.orden!==null ? (ordenes[editIdx.orden].facturaId||null) : null,
+  };
+  if(tieneFactura && orden.estado==='Cobrado'){
+    const fIdx=facturas.findIndex(f=>f.ordenNum===orden.num);
+    const fact={
+      id:'FACT'+Date.now(),
+      num:(facturas.length+1).toString().padStart(4,'0'),
+      fecha:hoy(), ordenNum:orden.num,
+      clienteId:cId, clienteNombre:cli?.nombre||'', clienteCedula:cli?.cedula||'',
+      items, base, ivaAmt, total, ivaModo:modo,
+    };
+    if(fIdx>=0){ facturas[fIdx]=fact; } else { facturas.push(fact); orden.facturaId=fact.id; }
+    STORE.set('tp_facturas',facturas);
+  }
+  if(editIdx.orden!==null) ordenes[editIdx.orden]=orden;
+  else ordenes.push(orden);
+  STORE.set('tp_ordenes',ordenes);
+  const yaEnCaja=caja.some(c=>c.ref===`ORD-${orden.num}`&&c.tipo==='Ingreso');
+  if(orden.estado==='Cobrado'&&!yaEnCaja&&total>0){
+    caja.push({fecha:hoy(),tipo:'Ingreso',concepto:`Servicio técnico — Orden #${orden.num} — ${cli?.nombre}`,monto:total,ref:`ORD-${orden.num}`});
+    STORE.set('tp_caja',caja);
+  }
+  cerrarModal('modal-orden');
+  renderOrdenes();
+  actualizarDashboard();
+}
+
+function renderOrdenes(lista=null){
+  const data=lista||ordenes;
+  if(vistaOrdenes==='tabla'){
+    const b=document.getElementById('ordenes-body');
+    b.innerHTML=data.length===0?'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px;">Sin órdenes registradas</td></tr>':'';
+    [...data].reverse().forEach(o=>{
+      const idx=ordenes.indexOf(o);
+      const factBadge=o.conFactura?`<span class="iva-badge">Con IVA</span>`:`<span class="sin-iva">Sin IVA</span>`;
+      const stCls='st-'+o.estado?.toLowerCase().replace(' ','-').replace('ó','o')||'';
+      b.innerHTML+=`<tr>
+        <td><strong>#${o.num}</strong></td><td>${o.fecha}</td><td>${o.clienteNombre}</td>
+        <td>${o.tipo}<br><small style="color:#888">${o.marca||''} ${o.modelo||''}</small></td>
+        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${o.falla||''}">${o.falla||'—'}</td>
+        <td>${estadoBadge(o.estado)}</td><td>${factBadge}</td>
+        <td><strong>$${(o.total||0).toFixed(2)}</strong></td>
+        <td style="white-space:nowrap;">
+          <button class="btn btn-sm btn-primary no-print" onclick="abrirModalOrden(${idx})">✏️</button>
+          <button class="btn btn-sm btn-naranja no-print" onclick="imprimirOrden(${idx})">🖨️</button>
+          ${o.conFactura&&o.facturaId?`<button class="btn btn-sm" style="background:#7c3aed;color:#fff;" onclick="verFactura('${o.num}')">🧾</button>`:''}
+          ${(()=>{const cli=clientes.find(c=>c.id===o.clienteId);return cli&&cli.tel?`<a class="whatsapp-btn no-print" href="https://wa.me/593${cli.tel.replace(/[^0-9]/g,'').replace(/^0/,'')}?text=${encodeURIComponent('Hola '+cli.nombre+', su equipo '+o.tipo+' '+(o.marca||'')+' (Orden #'+o.num+') está: '+o.estado+'. Contáctenos para más info.')}" target="_blank">💬</a>`:''})()}
+          <button class="btn btn-sm btn-rojo no-print" onclick="eliminarOrden(${idx})">🗑️</button>
+        </td></tr>`;
+    });
+  } else {
+    // Vista Kanban Cards
+    const c=document.getElementById('ordenes-cards');
+    c.innerHTML='';
+    if(data.length===0){ c.innerHTML='<div style="color:#aaa;font-size:.9rem;padding:20px;">Sin órdenes registradas</div>'; return; }
+    const stMap={'Pendiente':'pendiente','En Proceso':'proceso','Listo':'listo','Entregado':'entregado','Cobrado':'cobrado'};
+    [...data].reverse().forEach(o=>{
+      const idx=ordenes.indexOf(o);
+      const stCls=stMap[o.estado]||'pendiente';
+      c.innerHTML+=`
+      <div class="orden-card st-${stCls}" style="animation:fadeIn .3s ease;">
+        <div class="ord-card-hdr">
+          <div>
+            <div class="ord-num">ORD #${o.num} · ${o.fecha}</div>
+            <div class="ord-equipo">${o.tipo} ${o.marca||''}</div>
+            <div class="ord-marca">${o.modelo||'Sin modelo'}</div>
+          </div>
+          ${estadoBadge(o.estado)}
+        </div>
+        <div class="ord-card-body">
+          <div class="ord-cliente">👤 ${o.clienteNombre}</div>
+          <div class="ord-falla">${o.falla||'Sin descripción de falla'}</div>
+        </div>
+        <div class="ord-card-footer">
+          <span class="ord-total">$${(o.total||0).toFixed(2)}</span>
+          <div style="display:flex;gap:5px;">
+            <button class="btn btn-sm btn-primary" onclick="abrirModalOrden(${idx})">✏️</button>
+            <button class="btn btn-sm btn-naranja" onclick="imprimirOrden(${idx})">🖨️</button>
+            ${o.conFactura&&o.facturaId?`<button class="btn btn-sm" style="background:#7c3aed;color:#fff;" onclick="verFactura('${o.num}')">🧾</button>`:''}
+            <button class="btn btn-sm btn-rojo" onclick="eliminarOrden(${idx})">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  PLANTILLA PDF — modelo WILLISMAR con QR
+// ══════════════════════════════════════════════════════════════════
+function plantillaPDF(cfg2, o, cli, iva_pct, itemsRows, sub, ivaVal, total, esTipo){
+  const esAcad = esTipo === 'academico';
+  const titDoc = esAcad ? 'COMPROBANTE DE TRABAJO ACADÉMICO' : 'COMPROBANTE DE PAGO';
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>${titDoc} #${o.num} – ${cfg2.nombre||'WILLISMAR'}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;font-size:11px;color:#222;background:#fff;padding:0;}
+.header-wrap{background:#1a3a5c;padding:0;}
+.header-inner{display:flex;align-items:stretch;min-height:90px;}
+.header-logo{flex:0 0 55%;padding:14px 18px;display:flex;flex-direction:column;justify-content:center;border-right:2px solid rgba(255,255,255,.15);}
+.header-logo .biz-name{font-size:22px;font-weight:900;color:#e87722;letter-spacing:2px;line-height:1.1;}
+.header-logo .biz-sub{font-size:8.5px;color:#e87722;font-weight:700;letter-spacing:.8px;margin-top:2px;text-transform:uppercase;}
+.header-logo .biz-info{font-size:8px;color:rgba(255,255,255,.75);margin-top:6px;line-height:1.6;}
+.header-gen{flex:0 0 45%;padding:10px 14px;display:flex;flex-direction:column;justify-content:center;}
+.header-gen table{width:100%;border-collapse:collapse;}
+.header-gen td{padding:3px 5px;font-size:8.5px;color:#fff;}
+.header-gen td:first-child{font-weight:700;color:#e87722;white-space:nowrap;}
+.doc-title{text-align:center;font-size:15px;font-weight:900;color:#1a3a5c;padding:10px 0 6px;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid #e87722;margin:0 14px;}
+.section{margin:8px 14px 0;}
+.section-hdr{background:#1a3a5c;color:#fff;padding:4px 10px;font-weight:700;font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;}
+.client-block{display:flex;border:1px solid #ddd;border-top:none;}
+.client-left{flex:1;padding:6px 10px;}
+.client-right{flex:0 0 200px;border-left:1px solid #ddd;padding:6px 10px;}
+.cl-row{display:flex;margin-bottom:3px;}
+.cl-label{font-weight:700;color:#555;font-size:8px;text-transform:uppercase;min-width:80px;}
+.cl-val{font-size:8.5px;color:#222;}
+.pago-table{width:100%;border-collapse:collapse;font-size:8.5px;}
+.pago-table th{background:#f5f5f5;padding:4px 6px;text-align:center;font-weight:700;border:1px solid #ddd;}
+.pago-table td{padding:4px 6px;text-align:center;border:1px solid #ddd;}
+.equipo-table{width:100%;border-collapse:collapse;font-size:8.5px;border:1px solid #ddd;border-top:none;}
+.equipo-table td{padding:5px 8px;border-right:1px solid #ddd;border-bottom:1px solid #ddd;vertical-align:top;}
+.equipo-table td.lbl{background:#f5f5f5;font-weight:700;color:#555;width:80px;text-transform:uppercase;font-size:7.5px;}
+.items-table{width:100%;border-collapse:collapse;font-size:8.5px;border:1px solid #ddd;border-top:none;}
+.items-table thead tr{background:#1a3a5c;}
+.items-table thead th{color:#fff;padding:5px 8px;text-align:left;font-weight:700;font-size:8px;}
+.items-table thead th.right{text-align:right;}
+.items-table tbody td{padding:5px 8px;border-bottom:1px solid #ececec;vertical-align:top;}
+.items-table tbody td.right{text-align:right;}
+.items-table tbody tr:nth-child(even){background:#f9f9f9;}
+.item-desc{font-weight:700;}
+.item-cod{color:#666;font-size:7.5px;}
+.footer-wrap{display:flex;margin:0 14px;border:1px solid #ddd;border-top:none;}
+.footer-info{flex:1;padding:8px 12px;font-size:7.5px;color:#555;line-height:1.6;border-right:1px solid #ddd;}
+.footer-info b{display:block;color:#1a3a5c;font-size:8px;margin-bottom:2px;}
+.footer-totales{flex:0 0 230px;padding:6px 10px;}
+.tot-row{display:flex;justify-content:space-between;padding:3px 0;font-size:8.5px;border-bottom:1px solid #f0f0f0;}
+.tot-row.total-final{font-weight:900;font-size:11px;color:#1a3a5c;border-top:2px solid #e87722;border-bottom:none;padding-top:5px;}
+.tot-row.total-final span:last-child{color:#e87722;}
+.firmas{display:flex;justify-content:space-around;margin:20px 14px 10px;gap:20px;align-items:flex-end;}
+.firma-box{flex:1;text-align:center;}
+.firma-box .linea{border-top:1.5px solid #1a3a5c;margin-bottom:4px;}
+.firma-box .nom{font-size:7.5px;color:#555;font-weight:700;text-transform:uppercase;}
+.firma-box .cargo{font-size:7px;color:#888;}
+.firma-qr{flex:0 0 100px;text-align:center;}
+.firma-qr canvas{border:1px solid #ddd;border-radius:4px;}
+.firma-qr p{font-size:6.5px;color:#888;margin-top:3px;}
+.pie-final{text-align:center;font-size:7px;color:#999;margin:0 14px 14px;border-top:1px solid #e87722;padding-top:5px;}
+.no-print{text-align:center;margin:16px;padding:12px;background:#f5f5f5;border-radius:8px;}
+.no-print button{padding:9px 22px;border:none;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:700;margin:0 4px;}
+.btn-imp{background:#1a3a5c;color:#fff;}
+.btn-cerrar{background:#ddd;color:#333;}
+@media print{.no-print{display:none!important;}body{padding:0;}@page{margin:8mm;}}
+</style></head><body>
+<div class="header-wrap">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="biz-name">${cfg2.nombre||'WILLISMAR'}</div>
+      <div class="biz-sub">${cfg2.sub||'SERVICIO TÉCNICO & TRABAJOS ACADÉMICOS'}</div>
+      <div class="biz-info">RUC: ${cfg2.ruc||'—'}<br>${cfg2.ciudad||'Bucay, Guayas'}<br>${cfg2.correo||''}</div>
+    </div>
+    <div class="header-gen">
+      <table>
+        <tr><td>Generación N°:</td><td>${o.num}</td></tr>
+        <tr><td>Fecha:</td><td>${o.fecha}</td></tr>
+        <tr><td>Sucursal:</td><td>${cfg2.ciudad||'BUCAY'}</td></tr>
+        <tr><td>Generado por:</td><td>${cfg2.nombre||'WILLISMAR'}</td></tr>
+        <tr><td>Teléfono:</td><td>${cfg2.tel||'—'}</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="doc-title">${titDoc}</div>
+<div class="section">
+  <div class="section-hdr">Datos del Cliente</div>
+  <div class="client-block">
+    <div class="client-left">
+      <div class="cl-row"><span class="cl-label">Cliente:</span><span class="cl-val">${o.clienteNombre}</span></div>
+      <div class="cl-row"><span class="cl-label">Identificación:</span><span class="cl-val">${cli.cedula||'—'}</span></div>
+      <div class="cl-row"><span class="cl-label">Dirección:</span><span class="cl-val">${cli.dir||'—'}</span></div>
+      <div class="cl-row"><span class="cl-label">Correo:</span><span class="cl-val">${cli.correo||'—'}</span></div>
+      <div class="cl-row"><span class="cl-label">Tel.:</span><span class="cl-val">${cli.tel||'—'}</span></div>
+    </div>
+    <div class="client-right">
+      <table class="pago-table">
+        <tr><th>Tipo Pago</th><th>Total</th></tr>
+        <tr><td>${o.pago||'EFECTIVO'}</td><td><b>$${total.toFixed(2)}</b></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+${!esAcad ? `
+<div class="section" style="margin-top:8px;">
+  <div class="section-hdr">Detalle del Equipo</div>
+  <table class="equipo-table">
+    <tr>
+      <td class="lbl">Tipo</td><td>${o.tipo||'—'}</td>
+      <td class="lbl">Marca</td><td>${o.marca||'—'}</td>
+      <td class="lbl">N/S</td><td>${o.serie||'—'}</td>
+    </tr>
+    <tr><td class="lbl">Modelo</td><td colspan="5">${o.modelo||'—'}</td></tr>
+    <tr><td class="lbl">Falla</td><td colspan="5" style="font-style:italic;">${o.falla||'—'}</td></tr>
+    ${o.obs?`<tr><td class="lbl">Obs.</td><td colspan="5">${o.obs}</td></tr>`:''}
+  </table>
+</div>` : `
+<div class="section" style="margin-top:8px;">
+  <div class="section-hdr">Detalle del Trabajo Académico</div>
+  <table class="equipo-table">
+    <tr>
+      <td class="lbl">Tipo</td><td>${o.tipo||'—'}</td>
+      <td class="lbl">Materia</td><td colspan="3">${o.materia||'—'}</td>
+    </tr>
+    <tr>
+      <td class="lbl">F. Entrega</td><td>${o.fechaEntrega||'—'}</td>
+      <td class="lbl">Anticipo</td><td colspan="3">$${(o.anticipo||0).toFixed(2)}</td>
+    </tr>
+    <tr><td class="lbl">Tema</td><td colspan="5" style="font-style:italic;">${o.tema||o.falla||'—'}</td></tr>
+  </table>
+</div>`}
+<div class="section" style="margin-top:8px;">
+  <div class="section-hdr">Detalle del ${esAcad?'Servicio':'Servicio / Repuestos'}</div>
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:8%">Código</th>
+        <th style="width:34%">Descripción</th>
+        <th class="right" style="width:10%">P.Unit</th>
+        <th class="right" style="width:7%">Cant.</th>
+        <th class="right" style="width:12%">Subtotal</th>
+        <th class="right" style="width:8%">Desc.</th>
+        <th class="right" style="width:9%">Base</th>
+        <th class="right" style="width:7%">IVA</th>
+        <th class="right" style="width:9%">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${itemsRows || `<tr><td colspan="9" style="text-align:center;color:#aaa;padding:10px;">Sin ítems registrados</td></tr>`}
+    </tbody>
+  </table>
+</div>
+<div class="footer-wrap" style="margin-top:0;">
+  <div class="footer-info">
+    <b>Información Adicional</b>
+    No se hacen devoluciones de dinero luego de haber sido emitido el comprobante.<br>
+    Si tiene alguna pregunta contáctenos:<br>
+    <b>Tel.:</b> ${cfg2.tel||'—'} &nbsp;|&nbsp; <b>Correo:</b> ${cfg2.correo||'—'}<br>
+    <b>Ciudad:</b> ${cfg2.ciudad||'Bucay, Guayas'}
+  </div>
+  <div class="footer-totales">
+    <div class="tot-row"><span>Subtotal IVA ${iva_pct}%</span><span>$${sub.toFixed(2)}</span></div>
+    <div class="tot-row"><span>Subtotal 0%</span><span>$0.00</span></div>
+    <div class="tot-row"><span>Base Imponible</span><span>$${sub.toFixed(2)}</span></div>
+    <div class="tot-row"><span>Valor IVA (+)</span><span>$${ivaVal.toFixed(2)}</span></div>
+    <div class="tot-row total-final"><span>VALOR TOTAL</span><span>$${total.toFixed(2)}</span></div>
+  </div>
+</div>
+<div class="firmas">
+  <div class="firma-box">
+    <div style="height:32px;"></div>
+    <div class="linea"></div>
+    <div class="nom">${cfg2.nombre||'WILLISMAR'}</div>
+    <div class="cargo">${esAcad?'Responsable Académico':'Técnico Responsable'}</div>
+  </div>
+  ${cfg2.qr ? `
+  <div class="firma-qr">
+    <canvas id="qr-firma"></canvas>
+    <p>Escanea para<br>info de contacto</p>
+  </div>` : ''}
+  <div class="firma-box">
+    <div style="height:32px;"></div>
+    <div class="linea"></div>
+    <div class="nom">${o.clienteNombre}</div>
+    <div class="cargo">Cliente — Recibí conforme</div>
+  </div>
+</div>
+<div class="pie-final">${cfg2.nombre||'WILLISMAR'} | ${cfg2.sub||'SERVICIO TÉCNICO & TRABAJOS ACADÉMICOS'} | ${cfg2.ciudad||'Bucay'} | ${cfg2.tel||''}</div>
+<div class="no-print">
+  <button class="btn-imp" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  <button class="btn-cerrar" onclick="window.close()">✕ Cerrar</button>
+</div>
+${cfg2.qr ? `
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+<script>
+window.addEventListener('load', function(){
+  const canvas = document.getElementById('qr-firma');
+  if(canvas && typeof QRCode !== 'undefined'){
+    new QRCode(canvas, {
+      text: ${JSON.stringify(cfg2.qr)},
+      width: 90, height: 90,
+      colorDark: '#1a3a5c', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+});
+<\/script>` : ''}
+</body></html>`;
+}
+
+function generarVentanaImpresion(html, titulo){
+  const win = window.open('','_blank','width=860,height=980');
+  win.document.write(html);
+  win.document.close();
+  win.document.title = titulo;
+  setTimeout(()=>win.focus(), 400);
+}
+
+function imprimirOrden(idx){
+  const o   = ordenes[idx];
+  const cli = clientes.find(c=>c.id===o.clienteId)||{};
+  const cfg2 = {...config};
+  const iva_pct = parseInt(cfg2.iva||15);
+  let sub=0;
+  const itemsRows = (o.items||[]).map(it=>{
+    const s   = Math.round(it.precio * it.cant * 100)/100;
+    const iv  = o.conFactura ? Math.round(s*(iva_pct/100)*100)/100 : 0;
+    const tot = Math.round((s+iv)*100)/100;
+    sub += s;
+    return `<tr>
+      <td><span class="item-cod">${it.cod||'—'}</span></td>
+      <td><span class="item-desc">${it.desc}</span></td>
+      <td class="right">$${it.precio.toFixed(2)}</td>
+      <td class="right">${it.cant}</td>
+      <td class="right">$${s.toFixed(2)}</td>
+      <td class="right">$0.00</td>
+      <td class="right">$${s.toFixed(2)}</td>
+      <td class="right">$${iv.toFixed(2)}</td>
+      <td class="right">$${tot.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+  const ivaVal = o.conFactura ? Math.round(sub*(iva_pct/100)*100)/100 : 0;
+  const total  = Math.round((sub+ivaVal)*100)/100;
+  generarVentanaImpresion(
+    plantillaPDF(cfg2, o, cli, iva_pct, itemsRows, sub, ivaVal, total, 'tecnico'),
+    `Orden #${o.num} – ${cfg2.nombre||'WILLISMAR'}`
+  );
+}
+
+function eliminarOrden(idx){ if(!confirm('¿Eliminar esta orden?')) return; ordenes.splice(idx,1); STORE.set('tp_ordenes',ordenes); renderOrdenes(); actualizarDashboard(); }
+
+function filtrarOrdenes(){
+  const q=document.getElementById('buscar-orden').value.toLowerCase();
+  const est=document.getElementById('filtro-estado').value;
+  const tipo=document.getElementById('filtro-tipo-eq').value;
+  renderOrdenes(ordenes.filter(o=>{
+    const m=!q||(o.clienteNombre+o.tipo+o.marca+o.modelo+o.falla).toLowerCase().includes(q);
+    return m&&(!est||o.estado===est)&&(!tipo||o.tipo===tipo);
+  }));
+}
+
+// ─── FACTURAS ────────────────────────────────────────────────────────────────
+function renderFacturas(lista=null){
+  const data=lista||facturas;
+  const b=document.getElementById('facturas-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px;">Sin facturas emitidas</td></tr>':'';
+  [...data].reverse().forEach(f=>{
+    b.innerHTML+=`<tr>
+      <td><strong>#${f.num}</strong></td><td>${f.fecha}</td><td>${f.clienteNombre}</td>
+      <td>${f.clienteCedula||'—'}</td><td>#${f.ordenNum}</td>
+      <td>$${(f.base||0).toFixed(2)}</td><td>$${(f.ivaAmt||0).toFixed(2)}</td>
+      <td><strong>$${(f.total||0).toFixed(2)}</strong></td>
+      <td><button class="btn btn-sm" style="background:#7c3aed;color:#fff;" onclick="verFactura('${f.ordenNum}')">🧾 Ver</button></td>
+    </tr>`;
+  });
+}
+
+function verFactura(ordenNum){
+  const f=facturas.find(x=>x.ordenNum===ordenNum);
+  if(!f){ alert('No hay factura para esta orden. Debe estar cobrada y el cliente haber pedido factura.'); return; }
+  const itemsHtml=(f.items||[]).map(it=>`<tr><td>${it.desc}</td><td>$${it.precio.toFixed(2)}</td><td>${it.cant}</td><td>$${(it.precio*it.cant).toFixed(2)}</td></tr>`).join('');
+  document.getElementById('factura-contenido').innerHTML=`
+  <div class="fact-print">
+    <div class="fact-hdr">
+      <div>
+        <h2>⚡ ${config.nombre||'TécnicoPRO'}</h2>
+        <p style="font-size:.8rem;color:#555;">${config.dir||''}</p>
+        <p style="font-size:.8rem;color:#555;">RUC: ${config.ruc||'—'} | Tel: ${config.tel||'—'}</p>
+      </div>
+      <div style="text-align:right;">
+        <div style="background:#0f2744;color:#fff;padding:12px 18px;border-radius:10px;">
+          <p style="font-size:.72rem;opacity:.7;letter-spacing:1px;">FACTURA</p>
+          <p style="font-size:1.4rem;font-weight:900;">#${f.num}</p>
+          <p style="font-size:.78rem;">${f.fecha}</p>
+        </div>
+      </div>
+    </div>
+    <p><strong>Cliente:</strong> ${f.clienteNombre}</p>
+    <p><strong>Cédula/RUC:</strong> ${f.clienteCedula||'—'} | <strong>Orden ref.:</strong> #${f.ordenNum}</p>
+    <table><thead><tr><th>Descripción</th><th>P.Unit</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+    <tbody>${itemsHtml}</tbody></table>
+    <div class="fact-totales">
+      <div><span>Base Imponible:</span><strong>$${(f.base||0).toFixed(2)}</strong></div>
+      <div><span>IVA (${config.iva||15}%):</span><strong>$${(f.ivaAmt||0).toFixed(2)}</strong></div>
+      <div class="grand"><span>TOTAL:</span><strong>$${(f.total||0).toFixed(2)}</strong></div>
+    </div>
+    <p style="margin-top:22px;font-size:.73rem;color:#888;text-align:center;">Documento generado por ${config.nombre||'TécnicoPRO'} · ${config.propietario||''}</p>
+  </div>`;
+  abrirModal('modal-ver-factura');
+}
+
+function filtrarFacturas(){
+  const q=document.getElementById('buscar-fact').value.toLowerCase();
+  renderFacturas(facturas.filter(f=>(f.clienteNombre+f.num+f.ordenNum).toLowerCase().includes(q)));
+}
+
+// ─── CLIENTES ────────────────────────────────────────────────────────────────
+function abrirModalCliente(idx=null){
+  editIdx.cliente=idx;
+  document.getElementById('modal-cli-titulo').textContent=idx!==null?'Editar Cliente':'Nuevo Cliente';
+  if(idx!==null){
+    const c=clientes[idx];
+    document.getElementById('cli-nombre').value=c.nombre||'';
+    document.getElementById('cli-id').value=c.cedula||'';
+    document.getElementById('cli-tel').value=c.tel||'';
+    document.getElementById('cli-correo').value=c.correo||'';
+    document.getElementById('cli-dir').value=c.dir||'';
+    document.getElementById('cli-notas').value=c.notas||'';
+  } else {
+    ['cli-nombre','cli-id','cli-tel','cli-correo','cli-dir','cli-notas'].forEach(id=>document.getElementById(id).value='');
+  }
+  abrirModal('modal-cliente');
+}
+
+function guardarCliente(){
+  const nombre=document.getElementById('cli-nombre').value.trim();
+  if(!nombre){ alert('El nombre es obligatorio'); return; }
+  const cli={
+    id: editIdx.cliente!==null ? clientes[editIdx.cliente].id : 'CLI'+Date.now(),
+    nombre, cedula:document.getElementById('cli-id').value,
+    tel:document.getElementById('cli-tel').value,
+    correo:document.getElementById('cli-correo').value,
+    dir:document.getElementById('cli-dir').value,
+    notas:document.getElementById('cli-notas').value,
+    fecha:hoy(),
+  };
+  if(editIdx.cliente!==null) clientes[editIdx.cliente]=cli;
+  else clientes.push(cli);
+  STORE.set('tp_clientes',clientes);
+  cerrarModal('modal-cliente');
+  renderClientes();
+  actualizarDashboard();
+}
+
+function renderClientes(lista=null){
+  const data=(lista||[...clientes]).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  const b=document.getElementById('clientes-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px;">Sin clientes registrados</td></tr>':'';
+  data.forEach((c,i)=>{
+    const idx=clientes.indexOf(c);
+    b.innerHTML+=`<tr>
+      <td>${i+1}</td><td><strong>${c.nombre}</strong></td><td>${c.cedula||'—'}</td>
+      <td>${c.tel||'—'}</td><td>${c.correo||'—'}</td>
+      <td><span class="badge-azul">${ordenes.filter(o=>o.clienteId===c.id).length}</span></td>
+      <td style="white-space:nowrap;">
+        ${c.tel?`<a class="whatsapp-btn" href="https://wa.me/593${c.tel.replace(/[^0-9]/g,'').replace(/^0/,'')}" target="_blank">💬 WA</a>`:''}
+        <button class="btn btn-sm btn-primary" onclick="abrirModalCliente(${idx})">✏️</button>
+        <button class="btn btn-sm btn-rojo" onclick="eliminarCliente(${idx})">🗑️</button>
+      </td></tr>`;
+  });
+}
+
+function eliminarCliente(idx){ if(!confirm('¿Eliminar cliente?')) return; clientes.splice(idx,1); STORE.set('tp_clientes',clientes); renderClientes(); }
+
+function filtrarClientes(){
+  const q=document.getElementById('buscar-cliente').value.toLowerCase();
+  renderClientes(clientes.filter(c=>(c.nombre+c.cedula+c.tel).toLowerCase().includes(q)));
+}
+
+// ─── STOCK ───────────────────────────────────────────────────────────────────
+function abrirModalStock(idx=null){
+  editIdx.stock=idx;
+  document.getElementById('modal-stk-titulo').textContent=idx!==null?'Editar Repuesto':'Agregar Repuesto';
+  if(idx!==null){
+    const s=stock[idx];
+    document.getElementById('stk-cod').value=s.cod||'';
+    document.getElementById('stk-cat').value=s.cat||'Repuesto';
+    document.getElementById('stk-desc').value=s.desc||'';
+    document.getElementById('stk-costo').value=s.costo||'';
+    document.getElementById('stk-precio').value=s.precio||'';
+    document.getElementById('stk-qty').value=s.qty||0;
+    document.getElementById('stk-min').value=s.min||2;
+  } else {
+    ['stk-cod','stk-desc','stk-costo','stk-precio'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('stk-qty').value=0;
+    document.getElementById('stk-min').value=2;
+  }
+  abrirModal('modal-stock');
+}
+
+function guardarStock(){
+  const desc=document.getElementById('stk-desc').value.trim();
+  if(!desc){ alert('La descripción es obligatoria'); return; }
+  const s={
+    id: editIdx.stock!==null ? stock[editIdx.stock].id : 'STK'+Date.now(),
+    cod:document.getElementById('stk-cod').value,
+    cat:document.getElementById('stk-cat').value,
+    desc, costo:parseFloat(document.getElementById('stk-costo').value)||0,
+    precio:parseFloat(document.getElementById('stk-precio').value)||0,
+    qty:parseInt(document.getElementById('stk-qty').value)||0,
+    min:parseInt(document.getElementById('stk-min').value)||2,
+  };
+  if(editIdx.stock!==null) stock[editIdx.stock]=s;
+  else stock.push(s);
+  STORE.set('tp_stock',stock);
+  cerrarModal('modal-stock');
+  renderStock();
+}
+
+function renderStock(lista=null){
+  const data=lista||stock;
+  const b=document.getElementById('stock-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="8" style="text-align:center;color:#aaa;padding:20px;">Sin artículos</td></tr>':'';
+  data.forEach((s,i)=>{
+    const idx=lista?stock.indexOf(s):i;
+    const bajo=s.qty<=s.min;
+    b.innerHTML+=`<tr>
+      <td>${s.cod||'—'}</td><td>${s.desc}</td><td>${s.cat}</td>
+      <td>$${(s.costo||0).toFixed(2)}</td><td>$${(s.precio||0).toFixed(2)}</td>
+      <td class="${bajo?'stock-low':'stock-ok'}">${s.qty}${bajo?' ⚠️':' ✅'}</td>
+      <td>${s.min}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm btn-primary" onclick="abrirModalStock(${idx})">✏️</button>
+        <button class="btn btn-sm btn-verde" onclick="ajustarStock(${idx})">+/-</button>
+        <button class="btn btn-sm btn-rojo" onclick="eliminarStock(${idx})">🗑️</button>
+      </td></tr>`;
+  });
+}
+
+function ajustarStock(idx){
+  const s=stock[idx];
+  const v=prompt(`Stock actual de "${s.desc}": ${s.qty}\nNueva cantidad:`,s.qty);
+  if(v!==null&&!isNaN(parseInt(v))){ stock[idx].qty=parseInt(v); STORE.set('tp_stock',stock); renderStock(); }
+}
+
+function eliminarStock(idx){ if(!confirm('¿Eliminar este ítem?')) return; stock.splice(idx,1); STORE.set('tp_stock',stock); renderStock(); }
+
+function filtrarStock(){
+  const q=document.getElementById('buscar-stock').value.toLowerCase();
+  const cat=document.getElementById('filtro-cat').value;
+  renderStock(stock.filter(s=>{ const m=!q||(s.desc+s.cod).toLowerCase().includes(q); return m&&(!cat||s.cat===cat); }));
+}
+
+// ─── COMPRAS ─────────────────────────────────────────────────────────────────
+function actualizarLinkGuia(){
+  const guia=document.getElementById('cmp-guia').value.trim();
+  const wrap=document.getElementById('guia-link-wrap');
+  if(guia){
+    wrap.style.display='block';
+    document.getElementById('guia-link').href=`https://www.servientrega.com.ec/wps/portal/Ecuador/Inicio/rastreo?guia=${guia}`;
+  } else { wrap.style.display='none'; }
+}
+
+function abrirModalCompra(idx=null){
+  editIdx.compra=idx;
+  document.getElementById('modal-cmp-titulo').textContent=idx!==null?'Editar Compra':'Nueva Compra';
+  if(idx!==null){
+    const c=compras[idx];
+    document.getElementById('cmp-proveedor').value=c.proveedor||'';
+    document.getElementById('cmp-fecha').value=c.fecha||hoy();
+    document.getElementById('cmp-desc').value=c.desc||'';
+    document.getElementById('cmp-monto').value=c.monto||'';
+    document.getElementById('cmp-pago').value=c.pago||'Efectivo';
+    document.getElementById('cmp-estado').value=c.estado||'Pedido';
+    document.getElementById('cmp-guia').value=c.guia||'';
+    document.getElementById('cmp-envio-obs').value=c.envioObs||'';
+    document.getElementById('cmp-notas').value=c.notas||'';
+    actualizarLinkGuia();
+  } else {
+    ['cmp-proveedor','cmp-desc','cmp-monto','cmp-guia','cmp-envio-obs','cmp-notas'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('cmp-fecha').value=hoy();
+    document.getElementById('cmp-estado').value='Pedido';
+    document.getElementById('guia-link-wrap').style.display='none';
+  }
+  abrirModal('modal-compra');
+}
+
+function guardarCompra(){
+  const proveedor=document.getElementById('cmp-proveedor').value.trim();
+  if(!proveedor){ alert('El proveedor es obligatorio'); return; }
+  const monto=parseFloat(document.getElementById('cmp-monto').value)||0;
+  const c={
+    id: editIdx.compra!==null ? compras[editIdx.compra].id : 'CMP'+Date.now(),
+    num:(compras.length+1).toString().padStart(4,'0'),
+    proveedor, fecha:document.getElementById('cmp-fecha').value||hoy(),
+    desc:document.getElementById('cmp-desc').value,
+    monto, pago:document.getElementById('cmp-pago').value,
+    estado:document.getElementById('cmp-estado').value,
+    guia:document.getElementById('cmp-guia').value.trim(),
+    envioObs:document.getElementById('cmp-envio-obs').value,
+    notas:document.getElementById('cmp-notas').value,
+  };
+  if(editIdx.compra!==null) compras[editIdx.compra]=c;
+  else compras.push(c);
+  STORE.set('tp_compras',compras);
+  if(c.estado==='Recibido'&&monto>0){
+    const yaEnCaja=caja.some(x=>x.ref==='CMP-'+c.id);
+    if(!yaEnCaja){ caja.push({fecha:hoy(),tipo:'Egreso',concepto:`Compra — ${c.proveedor}: ${(c.desc||'').slice(0,40)}`,monto,ref:'CMP-'+c.id}); STORE.set('tp_caja',caja); }
+  }
+  cerrarModal('modal-compra');
+  renderCompras();
+  actualizarDashboard();
+}
+
+function renderCompras(lista=null){
+  const data=lista||compras;
+  const b=document.getElementById('compras-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="8" style="text-align:center;color:#aaa;padding:20px;">Sin compras registradas</td></tr>':'';
+  [...data].reverse().forEach(c=>{
+    const idx=compras.indexOf(c);
+    const estCls={'Pedido':'est-pendiente','En Tránsito':'est-proceso','Recibido':'est-cobrado'}[c.estado]||'';
+    const guiaBtn=c.guia?`<a href="https://www.servientrega.com.ec/wps/portal/Ecuador/Inicio/rastreo?guia=${c.guia}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:#0ea5e9;color:#fff;border-radius:6px;padding:3px 9px;font-size:.7rem;font-weight:800;text-decoration:none;">🔍 ${c.guia}</a>`:'<span style="color:#ccc;font-size:.75rem;">Sin guía</span>';
+    b.innerHTML+=`<tr>
+      <td><strong>#${c.num}</strong></td><td>${c.fecha}</td><td>${c.proveedor}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${c.desc||''}">${c.desc||'—'}</td>
+      <td><strong>$${(c.monto||0).toFixed(2)}</strong></td>
+      <td><span class="est-badge ${estCls}">${c.estado}</span></td>
+      <td>${guiaBtn}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm btn-primary" onclick="abrirModalCompra(${idx})">✏️</button>
+        <button class="btn btn-sm btn-rojo" onclick="eliminarCompra(${idx})">🗑️</button>
+      </td></tr>`;
+  });
+}
+
+function eliminarCompra(idx){ if(!confirm('¿Eliminar esta compra?')) return; compras.splice(idx,1); STORE.set('tp_compras',compras); renderCompras(); }
+
+function filtrarCompras(){
+  const q=document.getElementById('buscar-compra').value.toLowerCase();
+  const est=document.getElementById('filtro-compra-estado').value;
+  renderCompras(compras.filter(c=>{ const m=!q||(c.proveedor+c.desc).toLowerCase().includes(q); return m&&(!est||c.estado===est); }));
+}
+
+// ─── CAJA ────────────────────────────────────────────────────────────────────
+function abrirModalCaja(){
+  ['caja-monto','caja-concepto','caja-ref'].forEach(id=>document.getElementById(id).value='');
+  abrirModal('modal-caja');
+}
+
+function guardarCaja(){
+  const monto=parseFloat(document.getElementById('caja-monto').value)||0;
+  if(!monto){ alert('Ingresa un monto'); return; }
+  caja.push({
+    id:'CAJ'+Date.now(), fecha:hoy(),
+    tipo:document.getElementById('caja-tipo').value,
+    concepto:document.getElementById('caja-concepto').value,
+    monto, ref:document.getElementById('caja-ref').value,
+  });
+  STORE.set('tp_caja',caja);
+  cerrarModal('modal-caja');
+  renderCaja();
+  actualizarDashboard();
+}
+
+function renderCaja(){
+  const b=document.getElementById('caja-body');
+  const sorted=[...caja].reverse();
+  b.innerHTML=sorted.length===0?'<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px;">Sin movimientos</td></tr>':'';
+  sorted.forEach(c=>{
+    const color=c.tipo==='Ingreso'?'#166534':'#991b1b';
+    b.innerHTML+=`<tr>
+      <td>${c.fecha}</td>
+      <td><span style="color:${color};font-weight:800;">${c.tipo}</span></td>
+      <td>${c.concepto}</td>
+      <td style="font-weight:800;color:${color};">${c.tipo==='Ingreso'?'+':'-'}$${(c.monto||0).toFixed(2)}</td>
+      <td>${c.ref||'—'}</td></tr>`;
+  });
+  const mesActual=hoy().substring(0,7);
+  const ingHoy=caja.filter(c=>c.fecha===hoy()&&c.tipo==='Ingreso').reduce((a,c)=>a+c.monto,0)
+    -caja.filter(c=>c.fecha===hoy()&&c.tipo==='Egreso').reduce((a,c)=>a+c.monto,0);
+  const semStart=new Date(); semStart.setDate(semStart.getDate()-7);
+  const ingSem=caja.filter(c=>new Date(c.fecha)>=semStart&&c.tipo==='Ingreso').reduce((a,c)=>a+c.monto,0);
+  const ingMes=caja.filter(c=>c.fecha.startsWith(mesActual)&&c.tipo==='Ingreso').reduce((a,c)=>a+c.monto,0);
+  const egrMes=caja.filter(c=>c.fecha.startsWith(mesActual)&&c.tipo==='Egreso').reduce((a,c)=>a+c.monto,0);
+  document.getElementById('caja-hoy').textContent='$'+ingHoy.toFixed(2);
+  document.getElementById('caja-sem').textContent='$'+ingSem.toFixed(2);
+  document.getElementById('caja-mes').textContent='$'+ingMes.toFixed(2);
+  document.getElementById('caja-egresos').textContent='$'+egrMes.toFixed(2);
+}
+
+// ─── CUSTODIA ────────────────────────────────────────────────────────────────
+function abrirModalCustodia(idx=null){
+  editIdx.custodia=idx;
+  document.getElementById('modal-cust-titulo').textContent=idx!==null?'Editar Custodia':'Registrar Equipo en Custodia';
+  llenarSelectClientes('cust-cliente');
+  if(idx!==null){
+    const c=custodia[idx];
+    document.getElementById('cust-cliente').value=c.clienteId||'';
+    document.getElementById('cust-tipo').value=c.tipo||'LAPTOP';
+    document.getElementById('cust-marca').value=c.marca||'';
+    document.getElementById('cust-modelo').value=c.modelo||'';
+    document.getElementById('cust-serie').value=c.serie||'';
+    document.getElementById('cust-estado-eq').value=c.estadoEq||'En Custodia';
+    document.getElementById('cust-fecha').value=c.fechaIngreso||hoy();
+    document.getElementById('cust-orden-ref').value=c.ordenRef||'';
+    document.getElementById('cust-obs').value=c.obs||'';
+  } else {
+    ['cust-marca','cust-modelo','cust-serie','cust-orden-ref','cust-obs'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('cust-fecha').value=hoy();
+    document.getElementById('cust-estado-eq').value='En Custodia';
+  }
+  abrirModal('modal-custodia');
+}
+
+function guardarCustodia(){
+  const cId=document.getElementById('cust-cliente').value;
+  const cli=clientes.find(c=>c.id===cId)||{};
+  const file=document.getElementById('cust-foto').files[0];
+  const guardar=(fotoData)=>{
+    const reg={
+      id: editIdx.custodia!==null ? custodia[editIdx.custodia].id : 'CST'+Date.now(),
+      num:(custodia.length+1).toString().padStart(4,'0'),
+      clienteId:cId, clienteNombre:cli.nombre||'N/A',
+      tipo:document.getElementById('cust-tipo').value,
+      marca:document.getElementById('cust-marca').value,
+      modelo:document.getElementById('cust-modelo').value,
+      serie:document.getElementById('cust-serie').value,
+      estadoEq:document.getElementById('cust-estado-eq').value,
+      fechaIngreso:document.getElementById('cust-fecha').value||hoy(),
+      ordenRef:document.getElementById('cust-orden-ref').value,
+      obs:document.getElementById('cust-obs').value,
+      foto: fotoData||(editIdx.custodia!==null ? custodia[editIdx.custodia].foto : null),
+    };
+    if(editIdx.custodia!==null) custodia[editIdx.custodia]=reg;
+    else custodia.push(reg);
+    STORE.set('tp_custodia',custodia);
+    cerrarModal('modal-custodia');
+    renderCustodia();
+    actualizarDashboard();
+  };
+  if(file){ const r=new FileReader(); r.onload=e=>guardar(e.target.result); r.readAsDataURL(file); }
+  else guardar(null);
+}
+
+function diasEnCustodia(fi){ return Math.floor((new Date()-new Date(fi))/(1000*60*60*24)); }
+
+function renderCustodia(lista=null){
+  let cambios=false;
+  custodia.forEach((c,i)=>{
+    if((c.estadoEq==='En Custodia'||c.estadoEq==='Notificado')&&diasEnCustodia(c.fechaIngreso)>=90){
+      custodia[i].estadoEq='Dado de Baja'; cambios=true;
+    }
+  });
+  if(cambios) STORE.set('tp_custodia',custodia);
+  const data=lista||custodia;
+  const b=document.getElementById('custodia-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px;">Sin equipos en custodia</td></tr>':'';
+  data.forEach((c,i)=>{
+    const idx=lista?custodia.indexOf(c):i;
+    const dias=diasEnCustodia(c.fechaIngreso);
+    const clsRow=c.estadoEq==='Dado de Baja'?'custodia-vencida':dias>=75?'custodia-prox':'custodia-ok';
+    const fechaVence=new Date(c.fechaIngreso); fechaVence.setDate(fechaVence.getDate()+90);
+    const fotoBtn=c.foto?`<img src="${c.foto}" style="width:48px;height:38px;object-fit:cover;border-radius:7px;cursor:pointer;border:2px solid #ddd;" onclick="verFoto('${c.foto}')">`:
+      '<span style="color:#ccc;font-size:.72rem;">Sin foto</span>';
+    const estCls={'En Custodia':'est-proceso','Notificado':'est-pendiente','Dado de Baja':'est-rojo','Retirado':'est-entregado'}[c.estadoEq]||'';
+    b.innerHTML+=`<tr class="${clsRow}">
+      <td><strong>#${c.num}</strong></td><td>${fotoBtn}</td><td>${c.clienteNombre}</td>
+      <td>${c.tipo}<br><small style="color:#777">${c.marca||''} ${c.modelo||''}</small></td>
+      <td>${c.fechaIngreso}</td><td><strong>${dias}</strong> días</td>
+      <td><span class="est-badge ${estCls}">${c.estadoEq}</span></td>
+      <td style="font-size:.73rem;">${c.estadoEq==='Retirado'||c.estadoEq==='Dado de Baja'?'—':fechaVence.toISOString().split('T')[0]}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm btn-primary" onclick="abrirModalCustodia(${idx})">✏️</button>
+        <button class="btn btn-sm btn-rojo" onclick="eliminarCustodia(${idx})">🗑️</button>
+      </td></tr>`;
+  });
+}
+
+function verFoto(src){ document.getElementById('foto-grande').src=src; abrirModal('modal-foto'); }
+function eliminarCustodia(idx){ if(!confirm('¿Eliminar registro?')) return; custodia.splice(idx,1); STORE.set('tp_custodia',custodia); renderCustodia(); }
+
+function filtrarCustodia(){
+  const q=document.getElementById('buscar-custodia').value.toLowerCase();
+  const est=document.getElementById('filtro-custodia-estado').value;
+  renderCustodia(custodia.filter(c=>{ const m=!q||(c.clienteNombre+c.tipo+c.marca+c.modelo).toLowerCase().includes(q); return m&&(!est||c.estadoEq===est); }));
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function actualizarDashboard(){
+  const pend=ordenes.filter(o=>o.estado==='Pendiente'||o.estado==='En Proceso').length;
+  document.getElementById('dc-hoy').textContent=ordenes.filter(o=>o.fecha===hoy()).length;
+  document.getElementById('dc-pend').textContent=pend;
+  document.getElementById('dc-ent').textContent=ordenes.filter(o=>o.estado==='Entregado'||o.estado==='Cobrado').length;
+  document.getElementById('dc-cli').textContent=clientes.length;
+  document.getElementById('dc-fact').textContent=facturas.length;
+  document.getElementById('dc-cust').textContent=custodia.filter(c=>c.estadoEq==='En Custodia'||c.estadoEq==='Notificado').length;
+  const mesActual=hoy().substring(0,7);
+  const ingMes=caja.filter(c=>c.fecha.startsWith(mesActual)&&c.tipo==='Ingreso').reduce((a,c)=>a+c.monto,0);
+  document.getElementById('dc-ing').textContent='$'+ingMes.toFixed(0);
+  document.getElementById('dc-acad').textContent=academico.length;
+  document.getElementById('ordenes-badge').textContent=pend+' pendientes';
+  // Últimas órdenes
+  const ult=[...ordenes].reverse().slice(0,6);
+  const b=document.getElementById('dash-ordenes-body');
+  b.innerHTML=ult.length===0?'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:16px;">Sin órdenes</td></tr>':'';
+  ult.forEach(o=>{ b.innerHTML+=`<tr>
+    <td>#${o.num}</td><td>${o.clienteNombre}</td><td>${o.tipo} ${o.modelo||''}</td>
+    <td>${estadoBadge(o.estado)}</td>
+    <td>${o.conFactura?'<span class="iva-badge">Con IVA</span>':'<span class="sin-iva">Sin IVA</span>'}</td>
+    <td>$${(o.total||0).toFixed(2)}</td><td>${o.fecha}</td></tr>`; });
+  // Stock bajo
+  const bajo=stock.filter(s=>s.qty<=s.min);
+  const db=document.getElementById('dash-stock-bajo');
+  db.innerHTML=bajo.length===0?'<p style="color:#aaa;font-size:.82rem;padding:4px 0;">Sin alertas ✅</p>':
+    bajo.map(s=>`<div class="mp-item"><strong>${s.desc}</strong> — <span class="stock-low">Stock: ${s.qty} (mín. ${s.min})</span></div>`).join('');
+  // Académicos recientes
+  const acadRec=[...academico].filter(a=>a.estado!=='Cobrado'&&a.estado!=='Entregado').reverse().slice(0,4);
+  const da=document.getElementById('dash-academico-rec');
+  if(da) da.innerHTML=acadRec.length===0?'<p style="color:#aaa;font-size:.82rem;padding:4px 0;">Sin trabajos pendientes ✅</p>':
+    acadRec.map(a=>`<div class="mp-item"><strong>${a.tipo}</strong> — ${a.clienteNombre} <span class="est-badge acad-${a.estado.toLowerCase().replace(' ','-')}" style="font-size:.6rem;">${a.estado}</span></div>`).join('');
+  // Compras recientes
+  const cr=[...compras].reverse().slice(0,4);
+  const dc=document.getElementById('dash-compras-rec');
+  const estCls={'Pedido':'est-pendiente','En Tránsito':'est-proceso','Recibido':'est-cobrado'};
+  dc.innerHTML=cr.length===0?'<p style="color:#aaa;font-size:.82rem;padding:4px 0;">Sin compras</p>':
+    cr.map(c=>`<div class="mp-item"><strong>${c.proveedor}</strong> ${c.guia?'📦 '+c.guia:''} — <span class="est-badge ${estCls[c.estado]||''}">${c.estado}</span></div>`).join('');
+}
+
+// ─── ACADÉMICO ───────────────────────────────────────────────────────────────
+let acadArchivoData = null;
+let acadArchivoNombre = null;
+
+function abrirModalAcademico(idx=null){
+  editIdx.academico=idx;
+  acadArchivoData=null; acadArchivoNombre=null;
+  document.getElementById('modal-acad-titulo').textContent=idx!==null?'Editar Trabajo Académico':'Nuevo Trabajo Académico';
+  llenarSelectClientes('acad-cliente');
+  document.getElementById('acad-archivo').value='';
+  document.getElementById('acad-upload-box').className='file-upload-box';
+  document.getElementById('acad-upload-label').textContent='📄 Clic para subir el archivo (Word, PDF, PPT, ZIP...)';
+  document.getElementById('acad-archivo-actual').style.display='none';
+  if(idx!==null){
+    const a=academico[idx];
+    document.getElementById('acad-cliente').value=a.clienteId||'';
+    document.getElementById('acad-estado').value=a.estado||'Pendiente';
+    document.getElementById('acad-tipo').value=a.tipo||'Tesis';
+    document.getElementById('acad-fecha-entrega').value=a.fechaEntrega||'';
+    document.getElementById('acad-tema').value=a.tema||'';
+    document.getElementById('acad-universidad').value=a.universidad||'';
+    document.getElementById('acad-materia').value=a.materia||'';
+    document.getElementById('acad-paginas').value=a.paginas||'';
+    document.getElementById('acad-precio').value=a.precio||'';
+    document.getElementById('acad-anticipo').value=a.anticipo||'';
+    document.getElementById('acad-pago').value=a.pago||'Efectivo';
+    document.getElementById('acad-instrucciones').value=a.instrucciones||'';
+    document.getElementById('acad-obs').value=a.obs||'';
+    if(a.archivoNombre){
+      acadArchivoData=a.archivoData||null;
+      acadArchivoNombre=a.archivoNombre;
+      document.getElementById('acad-archivo-actual').style.display='flex';
+      document.getElementById('acad-archivo-nombre').textContent='📎 '+a.archivoNombre;
+      document.getElementById('acad-upload-box').className='file-upload-box has-file';
+    }
+  } else {
+    ['acad-tema','acad-universidad','acad-materia','acad-paginas','acad-precio','acad-anticipo','acad-instrucciones','acad-obs'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('acad-estado').value='Pendiente';
+    document.getElementById('acad-fecha-entrega').value='';
+  }
+  calcularTotalAcad();
+  abrirModal('modal-academico');
+}
+
+function actualizarArchivoAcad(input){
+  const file=input.files[0]; if(!file) return;
+  if(file.size>15*1024*1024){ alert('El archivo es muy grande. Máximo 15MB.'); input.value=''; return; }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    acadArchivoData=e.target.result;
+    acadArchivoNombre=file.name;
+    document.getElementById('acad-upload-label').textContent='✅ '+file.name;
+    document.getElementById('acad-upload-box').className='file-upload-box has-file';
+    document.getElementById('acad-archivo-actual').style.display='flex';
+    document.getElementById('acad-archivo-nombre').textContent='📎 '+file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+function limpiarArchivoAcad(){
+  acadArchivoData=null; acadArchivoNombre=null;
+  document.getElementById('acad-archivo').value='';
+  document.getElementById('acad-upload-box').className='file-upload-box';
+  document.getElementById('acad-upload-label').textContent='📄 Clic para subir el archivo (Word, PDF, PPT, ZIP...)';
+  document.getElementById('acad-archivo-actual').style.display='none';
+}
+
+function calcularTotalAcad(){
+  const precio=parseFloat(document.getElementById('acad-precio').value)||0;
+  const anticipo=parseFloat(document.getElementById('acad-anticipo').value)||0;
+  const saldo=Math.max(0,precio-anticipo);
+  document.getElementById('acad-saldo').textContent='$'+saldo.toFixed(2);
+}
+
+function guardarAcademico(){
+  const cId=document.getElementById('acad-cliente').value;
+  if(!cId){ alert('Selecciona un cliente'); return; }
+  const tema=document.getElementById('acad-tema').value.trim();
+  if(!tema){ alert('El tema es obligatorio'); return; }
+  const cli=clientes.find(c=>c.id===cId)||{};
+  const precio=parseFloat(document.getElementById('acad-precio').value)||0;
+  const anticipo=parseFloat(document.getElementById('acad-anticipo').value)||0;
+  const estado=document.getElementById('acad-estado').value;
+  const reg={
+    id: editIdx.academico!==null ? academico[editIdx.academico].id : 'ACA'+Date.now(),
+    num: editIdx.academico!==null ? academico[editIdx.academico].num : (academico.length+1).toString().padStart(4,'0'),
+    fecha:hoy(), clienteId:cId, clienteNombre:cli.nombre||'',
+    tipo:document.getElementById('acad-tipo').value,
+    tema, estado,
+    fechaEntrega:document.getElementById('acad-fecha-entrega').value,
+    universidad:document.getElementById('acad-universidad').value,
+    materia:document.getElementById('acad-materia').value,
+    paginas:document.getElementById('acad-paginas').value,
+    precio, anticipo, saldo:Math.max(0,precio-anticipo),
+    pago:document.getElementById('acad-pago').value,
+    instrucciones:document.getElementById('acad-instrucciones').value,
+    obs:document.getElementById('acad-obs').value,
+    archivoData: acadArchivoData || (editIdx.academico!==null ? academico[editIdx.academico].archivoData : null),
+    archivoNombre: acadArchivoNombre || (editIdx.academico!==null ? academico[editIdx.academico].archivoNombre : null),
+  };
+  if(editIdx.academico!==null) academico[editIdx.academico]=reg;
+  else academico.push(reg);
+  STORE.set('tp_academico',academico);
+  // Registrar en caja si cobrado
+  if(estado==='Cobrado'&&precio>0){
+    const yaEnCaja=caja.some(c=>c.ref===`ACA-${reg.num}`);
+    if(!yaEnCaja){
+      caja.push({fecha:hoy(),tipo:'Ingreso',concepto:`Trabajo académico — ${reg.tipo} — ${cli.nombre}`,monto:precio,ref:`ACA-${reg.num}`});
+      STORE.set('tp_caja',caja);
+    }
+  }
+  cerrarModal('modal-academico');
+  renderAcademico();
+  actualizarDashboard();
+}
+
+function renderAcademico(lista=null){
+  const data=lista||academico;
+  const b=document.getElementById('academico-body');
+  if(!b) return;
+  b.innerHTML=data.length===0?'<tr><td colspan="10" style="text-align:center;color:#aaa;padding:20px;">Sin trabajos académicos registrados</td></tr>':'';
+  const estadoCls={'Pendiente':'acad-pendiente','En Proceso':'acad-proceso','Listo':'est-listo','Entregado':'acad-entregado','Cobrado':'acad-cobrado'};
+  [...data].reverse().forEach(a=>{
+    const idx=academico.indexOf(a);
+    const cli=clientes.find(c=>c.id===a.clienteId)||{};
+    const hoy_date=new Date(); const entrega=a.fechaEntrega?new Date(a.fechaEntrega):null;
+    const diasRestantes=entrega?Math.ceil((entrega-hoy_date)/(1000*60*60*24)):null;
+    const alertaEntrega=diasRestantes!==null&&diasRestantes<=3&&diasRestantes>=0&&a.estado!=='Entregado'&&a.estado!=='Cobrado';
+    const archivoBtn=a.archivoData?`<button class="btn btn-sm btn-verde" onclick="descargarArchivoAcad(${idx})" title="Descargar ${a.archivoNombre||'archivo'}">⬇️ Descargar</button>`:'<span style="color:#ccc;font-size:.72rem;">Sin archivo</span>';
+    const waLink=cli.tel?`<a class="whatsapp-btn" href="https://wa.me/593${cli.tel.replace(/[^0-9]/g,'').replace(/^0/,'')}?text=${encodeURIComponent('Hola '+cli.nombre+', su trabajo de '+a.tipo+' está: '+a.estado+'.')}" target="_blank">💬</a>`:'';
+    b.innerHTML+=`<tr style="${alertaEntrega?'background:#fff7ed;':''}" >
+      <td><strong>#${a.num}</strong></td>
+      <td>${a.fecha}</td>
+      <td>${a.clienteNombre}${waLink?'<br>'+waLink:''}</td>
+      <td><span class="acad-tipo-badge">${a.tipo}</span></td>
+      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${a.tema}">${a.tema}</td>
+      <td>${a.fechaEntrega||'—'}${alertaEntrega?'<br><span style="color:#ef4444;font-size:.68rem;font-weight:800;">⚠️ '+diasRestantes+' días!</span>':''}</td>
+      <td><span class="est-badge ${estadoCls[a.estado]||''}">${a.estado}</span></td>
+      <td><strong>$${(a.precio||0).toFixed(2)}</strong><br><small style="color:#aaa;">Saldo: $${(a.saldo||0).toFixed(2)}</small></td>
+      <td>${archivoBtn}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm btn-naranja" onclick="imprimirAcad(${idx})">🖨️</button>
+        <button class="btn btn-sm btn-primary" onclick="abrirModalAcademico(${idx})">✏️</button>
+        <button class="btn btn-sm btn-rojo" onclick="eliminarAcademico(${idx})">🗑️</button>
+      </td></tr>`;
+  });
+}
+
+function descargarArchivoAcad(idx){
+  const a=academico[idx];
+  if(!a.archivoData){ alert('No hay archivo guardado.'); return; }
+  const link=document.createElement('a');
+  link.href=a.archivoData;
+  link.download=a.archivoNombre||'trabajo_academico';
+  link.click();
+}
+
+function imprimirAcad(idx){
+  const a   = academico[idx];
+  const cli = clientes.find(c=>c.id===a.clienteId)||{};
+  const cfg2 = {...config};
+  const iva_pct = parseInt(cfg2.iva||15);
+  const total  = parseFloat(a.precio)||0;
+  const sub    = Math.round(total/(1+(iva_pct/100))*100)/100;
+  const ivaVal = Math.round((total-sub)*100)/100;
+  // Build a compatible 'o' object for the template
+  const o = {
+    num: a.num, fecha: a.fecha, clienteNombre: a.clienteNombre,
+    tipo: a.tipo, materia: a.materia, fechaEntrega: a.fechaEntrega,
+    anticipo: a.anticipo, tema: a.tema, falla: a.tema, pago: a.pago||'EFECTIVO',
+  };
+  const itemsRows = `<tr>
+    <td><span class="item-cod">ACAD</span></td>
+    <td><span class="item-desc">${a.tipo} — ${a.tema}</span></td>
+    <td class="right">$${total.toFixed(2)}</td>
+    <td class="right">1</td>
+    <td class="right">$${sub.toFixed(2)}</td>
+    <td class="right">$0.00</td>
+    <td class="right">$${sub.toFixed(2)}</td>
+    <td class="right">$${ivaVal.toFixed(2)}</td>
+    <td class="right">$${total.toFixed(2)}</td>
+  </tr>`;
+  generarVentanaImpresion(
+    plantillaPDF(cfg2, o, cli, iva_pct, itemsRows, sub, ivaVal, total, 'academico'),
+    `Trabajo Acad. #${a.num} – ${cfg2.nombre||'WILLISMAR'}`
+  );
+}
+
+function eliminarAcademico(idx){ if(!confirm('¿Eliminar este trabajo?')) return; academico.splice(idx,1); STORE.set('tp_academico',academico); renderAcademico(); actualizarDashboard(); }
+
+function filtrarAcademico(){
+  const q=document.getElementById('buscar-acad').value.toLowerCase();
+  const est=document.getElementById('filtro-acad-estado').value;
+  const tipo=document.getElementById('filtro-acad-tipo').value;
+  renderAcademico(academico.filter(a=>{
+    const m=!q||(a.clienteNombre+a.tema+a.tipo+a.universidad).toLowerCase().includes(q);
+    return m&&(!est||a.estado===est)&&(!tipo||a.tipo===tipo);
+  }));
+}
+
+// ─── RESPALDO ─────────────────────────────────────────────────────────────────
+function respaldarDatos(){
+  const data={version:'2.0',fecha:hoy(),ordenes,clientes,stock,compras,facturas,caja,custodia,academico,config};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`TecnicoPRO_respaldo_${hoy()}.json`; a.click();
+  const al=document.getElementById('backup-alert');
+  al.className='alert alert-success show'; al.textContent='✅ Respaldo descargado correctamente.';
+  setTimeout(()=>al.className='alert',3500);
+}
+
+function restaurarDatos(e){
+  const file=e.target.files[0]; if(!file) return;
+  const al=document.getElementById('backup-alert');
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!confirm(`¿Restaurar respaldo del ${data.fecha||'desconocido'}?\n⚠️ Reemplazará todos los datos actuales.`)) return;
+      if(data.ordenes){ ordenes=data.ordenes; STORE.set('tp_ordenes',ordenes); }
+      if(data.clientes){ clientes=data.clientes; STORE.set('tp_clientes',clientes); }
+      if(data.stock){ stock=data.stock; STORE.set('tp_stock',stock); }
+      if(data.compras){ compras=data.compras; STORE.set('tp_compras',compras); }
+      if(data.facturas){ facturas=data.facturas; STORE.set('tp_facturas',facturas); }
+      if(data.caja){ caja=data.caja; STORE.set('tp_caja',caja); }
+      if(data.custodia){ custodia=data.custodia; STORE.set('tp_custodia',custodia); }
+      if(data.academico){ academico=data.academico; STORE.set('tp_academico',academico); }
+      if(data.config){ config=data.config; STORE.setObj('tp_config',config); actualizarNombreUI(); }
+      actualizarDashboard();
+      al.className='alert alert-success show'; al.textContent='✅ Datos restaurados exitosamente.';
+    } catch{ al.className='alert alert-error show'; al.textContent='❌ Error: archivo inválido.'; }
+    setTimeout(()=>al.className='alert',4000);
+    e.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ─── NAVEGACIÓN MÓVIL ────────────────────────────────────────────────────────
+function showPageMobile(id){
+  cerrarMobileMore();
+  showPage(id);
+  // Actualizar barra inferior
+  document.querySelectorAll('.mnav-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('mnav-'+id);
+  if(btn) btn.classList.add('active');
+}
+
+function toggleMobileMore(){
+  const menu = document.getElementById('mobile-more-menu');
+  const overlay = document.getElementById('mobile-more-overlay');
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  overlay.style.display = isOpen ? 'none' : 'block';
+}
+
+function cerrarMobileMore(){
+  document.getElementById('mobile-more-menu').style.display = 'none';
+  document.getElementById('mobile-more-overlay').style.display = 'none';
+}
+
+// ─── ANIMACIÓN ─────────────────────────────────────────────────────────────────
+const style=document.createElement('style');
+style.textContent='@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(style);
+
+// ─── PWA SERVICE WORKER ────────────────────────────────────────────────────────
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW:',e));
+}
+</script>
+</body>
+</html>
