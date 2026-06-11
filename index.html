@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Willismar</title>
+<meta name="theme-color" content="#0a2455">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a2455'/><text y='.9em' font-size='70' x='15'>🔧</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --az:#1450a3;--az2:#1a60c0;--az3:#0d3d8a;--azD:#0a2455;
+  --cy:#0ea5e9;--cy2:#38bdf8;--cySuave:#f0f9ff;
+  --vd:#16a34a;--ro:#dc2626;--am:#f59e0b;--mo:#7c3aed;
+  --gr:#f0f4f8;--gr2:#e2e8f0;--gr3:#cbd5e1;
+  --tx:#0f172a;--tx2:#475569;--bl:#fff;
+  --sh:0 2px 16px rgba(20,80,163,.08);--shG:0 8px 32px rgba(20,80,163,.16);
+  --r:12px;--r2:16px;--font:'Plus Jakarta Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--gr);color:var(--tx);min-height:100vh;}
+
+/* ── SIDEBAR ── */
+#sb{position:fixed;left:0;top:0;width:232px;height:100vh;background:var(--azD);display:flex;flex-direction:column;z-index:100;transition:.3s;}
+.sb-logo{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sb-logo-top{display:flex;align-items:center;gap:11px;}
+.sb-icon{width:38px;height:38px;background:var(--cy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.sb-logo h1{color:#fff;font-size:1rem;font-weight:900;line-height:1.2;}
+.sb-logo p{color:rgba(255,255,255,.32);font-size:.6rem;margin-top:5px;letter-spacing:.2px;line-height:1.5;}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 10px;}
+.nav-sec{font-size:.56rem;font-weight:800;color:rgba(255,255,255,.26);letter-spacing:1.8px;text-transform:uppercase;padding:14px 8px 4px;}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 11px;color:rgba(255,255,255,.58);cursor:pointer;font-size:.8rem;font-weight:600;transition:.16s;border-radius:9px;margin-bottom:1px;}
+.ni:hover{background:rgba(255,255,255,.07);color:#fff;}
+.ni.active{background:rgba(14,165,233,.22);color:var(--cy2);font-weight:700;}
+.ni .ico{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+.sb-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.22);font-size:.58rem;text-align:center;line-height:1.6;}
+
+/* ── MAIN ── */
+#main{margin-left:232px;min-height:100vh;}
+.topbar{background:var(--bl);padding:13px 26px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 0 var(--gr2);position:sticky;top:0;z-index:50;}
+.topbar h2{font-size:.95rem;color:var(--az);font-weight:800;}
+.topbar-r{display:flex;align-items:center;gap:9px;}
+.badge{background:var(--cy);color:#fff;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:800;}
+.badge-az{background:var(--az);color:#fff;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:800;}
+.content{padding:22px 26px;}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:22px;}
+.kpi{background:var(--bl);border-radius:var(--r2);padding:16px 18px;box-shadow:var(--sh);border-left:4px solid var(--az);transition:.2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shG);}
+.kpi.kv{border-left-color:var(--vd);}
+.kpi.kr{border-left-color:var(--ro);}
+.kpi.kc{border-left-color:var(--cy);}
+.kpi.km{border-left-color:var(--mo);}
+.kpi.ka{border-left-color:var(--am);}
+.kpi h3{font-size:.62rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;font-weight:700;}
+.kpi .num{font-size:1.9rem;font-weight:900;color:var(--az);line-height:1;}
+.kpi.kv .num{color:var(--vd);}
+.kpi.kr .num{color:var(--ro);}
+.kpi.kc .num{color:var(--cy);}
+.kpi.km .num{color:var(--mo);}
+.kpi.ka .num{color:var(--am);}
+.kpi-sub{font-size:.65rem;color:var(--tx2);margin-top:4px;}
+
+/* ── CARDS ORDENES ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:13px;margin-top:6px;}
+.ord-card{background:var(--bl);border-radius:var(--r2);box-shadow:var(--sh);border-top:4px solid var(--gr3);transition:.2s;overflow:hidden;}
+.ord-card:hover{transform:translateY(-3px);box-shadow:var(--shG);}
+.ord-card.sp{border-top-color:var(--am);}
+.ord-card.se{border-top-color:#3b82f6;}
+.ord-card.sl{border-top-color:var(--mo);}
+.ord-card.sd{border-top-color:#10b981;}
+.ord-card.sc{border-top-color:var(--vd);}
+.ord-card.sacad{border-top-color:var(--mo);}
+.oc-hdr{padding:13px 15px 8px;display:flex;justify-content:space-between;align-items:flex-start;}
+.oc-num{font-size:.68rem;font-weight:800;color:var(--tx2);letter-spacing:.4px;}
+.oc-titulo{font-size:.92rem;font-weight:800;color:var(--az);margin-top:2px;line-height:1.2;}
+.oc-sub{font-size:.72rem;color:var(--tx2);margin-top:1px;}
+.oc-body{padding:0 15px 11px;}
+.oc-cli{display:flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600;color:var(--tx);margin-bottom:5px;}
+.oc-desc{font-size:.73rem;color:var(--tx2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.oc-foot{padding:9px 15px;background:var(--gr);border-top:1px solid var(--gr2);display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.oc-total{font-size:.98rem;font-weight:900;color:var(--az);}
+.oc-fecha{font-size:.65rem;color:var(--tx2);}
+.tipo-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.2px;background:#ede9fe;color:#5b21b6;margin-bottom:4px;}
+.tipo-tag.eq{background:#dbeafe;color:#1e40af;}
+
+/* ── ESTADO BADGES ── */
+.est{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
+.est-p{background:#fef3c7;color:#92400e;}
+.est-e{background:#dbeafe;color:#1e40af;}
+.est-l{background:#ede9fe;color:#5b21b6;}
+.est-d{background:#d1fae5;color:#064e3b;}
+.est-c{background:#dcfce7;color:#14532d;}
+
+/* ── PANEL ── */
+.panel{background:var(--bl);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden;margin-bottom:18px;}
+.panel-hdr{background:var(--az);color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:.85rem;flex-wrap:wrap;gap:8px;}
+.ph-btn{background:var(--cy);color:#fff;border-radius:8px;padding:5px 13px;font-size:.71rem;cursor:pointer;transition:.16s;border:none;font-weight:800;}
+.ph-btn:hover{background:var(--cy2);}
+.panel-body{padding:16px 18px;}
+
+/* ── TABLA ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.79rem;}
+thead tr{background:var(--az);color:#fff;}
+thead th{padding:9px 12px;text-align:left;font-weight:700;white-space:nowrap;font-size:.7rem;text-transform:uppercase;letter-spacing:.4px;}
+tbody tr{border-bottom:1px solid var(--gr2);}
+tbody tr:hover{background:#f8fafc;}
+tbody td{padding:8px 12px;vertical-align:middle;}
+
+/* ── FORM ── */
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;}
+.f{display:flex;flex-direction:column;gap:4px;}
+.f label{font-size:.68rem;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;}
+.f input,.f select,.f textarea{border:2px solid var(--gr2);border-radius:9px;padding:8px 11px;font-size:.84rem;font-family:var(--font);color:var(--tx);transition:.16s;background:#fafbfc;}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--cy);background:#fff;box-shadow:0 0 0 3px rgba(14,165,233,.1);}
+.f textarea{resize:vertical;min-height:54px;}
+.ff{grid-column:1/-1;}
+.f input[readonly]{background:var(--gr);color:var(--tx2);}
+
+/* ── TIPO SELECTOR (nuevo orden unificado) ── */
+.tipo-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.tipo-btn{padding:14px;border:2px solid var(--gr2);border-radius:12px;cursor:pointer;text-align:center;transition:.18s;background:var(--bl);font-family:var(--font);}
+.tipo-btn:hover{border-color:var(--cy);background:var(--cySuave);}
+.tipo-btn.sel-eq{border-color:#3b82f6;background:#eff6ff;}
+.tipo-btn.sel-ac{border-color:var(--mo);background:#faf5ff;}
+.tipo-btn .tb-ico{font-size:1.8rem;display:block;margin-bottom:5px;}
+.tipo-btn .tb-txt{font-size:.8rem;font-weight:800;color:var(--tx);}
+.tipo-btn .tb-sub{font-size:.65rem;color:var(--tx2);margin-top:2px;}
+
+/* ── BOTONES ── */
+.btn{padding:8px 16px;border:none;border-radius:9px;font-size:.8rem;font-weight:700;font-family:var(--font);cursor:pointer;transition:.16s;display:inline-flex;align-items:center;gap:5px;}
+.btn-az{background:var(--az);color:#fff;}.btn-az:hover{background:var(--az2);}
+.btn-cy{background:var(--cy);color:#fff;}.btn-cy:hover{background:var(--cy2);}
+.btn-vd{background:var(--vd);color:#fff;}.btn-vd:hover{opacity:.88;}
+.btn-ro{background:var(--ro);color:#fff;padding:5px 10px;font-size:.71rem;}
+.btn-gh{background:var(--gr);color:var(--tx2);border:2px solid var(--gr2);}.btn-gh:hover{background:var(--gr2);}
+.btn-sm{padding:5px 10px;font-size:.7rem;}
+.btn-mo{background:var(--mo);color:#fff;}.btn-mo:hover{opacity:.88;}
+.btn-g{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
+
+/* ── SEARCH ── */
+.sb{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
+.sb input,.sb select{padding:8px 12px;border:2px solid var(--gr2);border-radius:9px;font-size:.8rem;background:var(--gr);font-family:var(--font);}
+.sb input{flex:1;min-width:150px;}
+.sb input:focus,.sb select:focus{outline:none;border-color:var(--cy);background:#fff;}
+
+/* ── MODAL ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(15,23,42,.52);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.mo.show{display:flex;}
+.mc{background:#fff;border-radius:var(--r2);width:90%;max-width:780px;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.22);}
+.mh{background:var(--az);color:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;border-radius:var(--r2) var(--r2) 0 0;position:sticky;top:0;z-index:10;}
+.mh h3{font-size:.93rem;font-weight:800;}
+.mc-close{background:none;border:none;color:rgba(255,255,255,.55);font-size:1.4rem;cursor:pointer;line-height:1;transition:.14s;}
+.mc-close:hover{color:#fff;}
+.mb{padding:20px;}
+.mf{padding:14px 20px;border-top:1px solid var(--gr2);display:flex;justify-content:flex-end;gap:7px;background:#fafbfc;}
+
+/* ── ITEMS ── */
+.items-area{margin-top:10px;}
+.items-area table{font-size:.77rem;}
+.items-area input,.items-area select{border:1.5px solid var(--gr2);border-radius:7px;padding:5px 7px;width:100%;font-size:.77rem;font-family:var(--font);}
+.tots{background:var(--gr);border-radius:11px;padding:14px;margin-top:12px;max-width:300px;margin-left:auto;}
+.tots .fila{display:flex;justify-content:space-between;font-size:.81rem;padding:3px 0;color:var(--tx2);}
+.tots .fila strong{color:var(--tx);}
+.tots .total{font-weight:900;font-size:1rem;color:var(--az);border-top:2px solid var(--cy);margin-top:5px;padding-top:7px;}
+
+/* ── IVA BOX ── */
+.iva-box{margin-top:12px;padding:12px;background:var(--cySuave);border:2px solid var(--cy);border-radius:11px;}
+.iva-radios{display:flex;gap:9px;flex-wrap:wrap;margin-top:9px;}
+.iva-r{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.8rem;padding:7px 12px;border-radius:8px;border:2px solid var(--gr2);background:#fff;flex:1;min-width:130px;}
+
+/* ── ALERT ── */
+.al{padding:9px 13px;border-radius:8px;font-size:.8rem;margin-bottom:10px;display:none;}
+.al.show{display:block;}
+.al-ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}
+.al-er{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+.al-in{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;}
+
+/* ── CUSTODIA ── */
+.cust-venc{background:#fee2e2;}
+.cust-prox{background:#fef9c3;}
+.cust-ok{background:#f0fdf4;}
+
+/* ── PAGE ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── TABS MODAL ── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--gr2);margin-bottom:14px;}
+.tab{padding:8px 16px;cursor:pointer;font-size:.8rem;font-weight:700;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.16s;}
+.tab.active{color:var(--az);border-bottom-color:var(--cy);}
+
+/* ── VISTA TOGGLE ── */
+.vtoggle{display:flex;gap:3px;background:var(--gr);border-radius:8px;padding:3px;}
+.vbtn{padding:5px 11px;border-radius:6px;border:none;cursor:pointer;font-size:.73rem;font-weight:700;background:transparent;color:var(--tx2);transition:.14s;}
+.vbtn.active{background:var(--bl);color:var(--az);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+/* ── LOGIN ── */
+.lg-bg{background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f172a 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
+.lg-card{background:#fff;border-radius:22px;padding:38px;width:100%;max-width:350px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.4);}
+.lg-icon{width:68px;height:68px;background:var(--az);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.9rem;}
+.lg-card h1{font-size:1.4rem;font-weight:900;color:var(--az);}
+.lg-card p{font-size:.78rem;color:var(--tx2);margin:6px 0 22px;}
+.lg-card input{width:100%;padding:11px 14px;border:2px solid var(--gr2);border-radius:10px;font-size:.9rem;font-family:var(--font);text-align:center;letter-spacing:3px;}
+.lg-card input:focus{outline:none;border-color:var(--cy);}
+.lg-card input.err{border-color:var(--ro);animation:shake .3s;}
+.lg-btn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:10px;background:var(--az);color:#fff;font-size:.9rem;font-weight:800;cursor:pointer;font-family:var(--font);transition:.18s;}
+.lg-btn:hover{background:var(--az2);}
+.lg-err{display:none;color:var(--ro);font-size:.76rem;margin-top:8px;font-weight:700;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* ── ENVIO BOX ── */
+.envio-box{background:#f0f9ff;border:2px solid var(--cy);border-radius:10px;padding:13px;margin-top:11px;}
+.envio-box h4{color:#0369a1;font-size:.78rem;font-weight:800;margin-bottom:9px;}
+.guia-link{display:inline-flex;align-items:center;gap:5px;background:var(--cy);color:#fff;border-radius:7px;padding:5px 13px;font-size:.74rem;font-weight:800;text-decoration:none;}
+.guia-link:hover{background:#0284c7;}
+
+/* ── WA ── */
+.wa-btn{display:inline-flex;align-items:center;gap:5px;background:#25d366;color:#fff;border:none;border-radius:7px;padding:4px 11px;font-size:.71rem;font-weight:800;cursor:pointer;text-decoration:none;transition:.16s;}
+.wa-btn:hover{background:#1da851;}
+
+/* ── FACT ── */
+.fact-print{background:#fff;padding:22px;font-size:.84rem;line-height:1.6;}
+.fact-print .fh{display:flex;justify-content:space-between;border-bottom:2px solid var(--az);padding-bottom:13px;margin-bottom:16px;}
+.fact-print h2{color:var(--az);font-size:1.15rem;font-weight:900;}
+.fact-print table{width:100%;border-collapse:collapse;margin:12px 0;}
+.fact-print table th{background:var(--az);color:#fff;padding:7px 11px;text-align:left;font-size:.76rem;}
+.fact-print table td{padding:7px 11px;border-bottom:1px solid #eee;}
+.fact-tots{text-align:right;margin-top:11px;}
+.fact-tots div{display:flex;justify-content:flex-end;gap:20px;padding:3px 0;font-size:.84rem;}
+.fact-tots .grand{font-weight:900;font-size:1.05rem;color:var(--az);border-top:2px solid var(--cy);padding-top:7px;margin-top:4px;}
+
+/* ── DASH GRID ── */
+.dash-grid{display:grid;grid-template-columns:1fr 285px;gap:16px;margin-top:6px;}
+@media(max-width:1080px){.dash-grid{grid-template-columns:1fr;}}
+.dash-side{display:flex;flex-direction:column;gap:13px;}
+.mp{background:var(--bl);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden;}
+.mp .mph{background:var(--az);color:#fff;padding:9px 15px;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:space-between;}
+.mp .mpb{padding:13px 15px;}
+.mp-it{padding:6px 0;border-bottom:1px solid var(--gr2);font-size:.76rem;}
+.mp-it:last-child{border-bottom:none;}
+
+/* ── CUSTODIA CARD ── */
+.cust-card{background:var(--bl);border-radius:var(--r2);box-shadow:var(--sh);border-left:4px solid var(--gr3);padding:14px;transition:.2s;}
+.cust-card:hover{transform:translateY(-2px);box-shadow:var(--shG);}
+.cust-card.cv{border-left-color:var(--ro);}
+.cust-card.cp{border-left-color:var(--am);}
+.cust-card.co{border-left-color:var(--vd);}
+.cust-foto{width:60px;height:60px;object-fit:cover;border-radius:8px;border:2px solid var(--gr2);}
+.cust-foto-ph{width:60px;height:60px;background:var(--gr);border-radius:8px;border:2px dashed var(--gr3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+
+/* ── FILE UPLOAD ── */
+.fu-box{border:2px dashed var(--gr3);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:.16s;background:#fafbfc;}
+.fu-box:hover{border-color:var(--cy);background:var(--cySuave);}
+.fu-box.has-f{border-color:var(--vd);background:#f0fdf4;}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #sb{display:none;}
+  #main{margin-left:0;padding-bottom:68px;}
+  .topbar{padding:9px 13px;}
+  .topbar h2{font-size:.84rem;}
+  #sync-st{display:none;}
+  .content{padding:13px;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:13px;}
+  .kpi{padding:11px 13px;}
+  .kpi .num{font-size:1.4rem;}
+  .cards-grid{grid-template-columns:1fr;}
+  .mc{width:96%;max-height:88vh;}
+  .mb{padding:13px;}
+  .fg{grid-template-columns:1fr;gap:9px;}
+  .panel-hdr{font-size:.78rem;}
+  .sb{flex-direction:column;}
+  .sb input,.sb select{width:100%;}
+  .dash-grid{grid-template-columns:1fr;}
+  .tipo-selector{grid-template-columns:1fr 1fr;}
+}
+
+/* ── BOTTOM NAV MOBILE ── */
+#mnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--azD);border-top:1px solid rgba(255,255,255,.1);z-index:200;padding:5px 0 7px;box-shadow:0 -4px 20px rgba(0,0,0,.3);}
+#mnav .mi{display:flex;justify-content:space-around;align-items:center;}
+#mnav .mb2{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 7px;cursor:pointer;color:rgba(255,255,255,.48);font-size:.56rem;font-weight:700;border:none;background:none;font-family:var(--font);transition:.16s;border-radius:9px;min-width:48px;}
+#mnav .mb2 .ico{font-size:1.25rem;line-height:1;}
+#mnav .mb2.active{color:var(--cy2);}
+#more-menu{display:none;position:fixed;bottom:65px;left:0;right:0;background:var(--azD);border-top:1px solid rgba(255,255,255,.1);border-radius:18px 18px 0 0;z-index:199;padding:14px 11px;box-shadow:0 -8px 30px rgba(0,0,0,.4);animation:slideUp .2s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#more-menu .mg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+#more-menu .mi2{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 5px;background:rgba(255,255,255,.06);border-radius:11px;cursor:pointer;color:rgba(255,255,255,.78);font-size:.62rem;font-weight:700;border:none;font-family:var(--font);text-align:center;}
+#more-menu .mi2 .ico{font-size:1.35rem;}
+#more-menu .mi2:hover{background:rgba(14,165,233,.2);color:var(--cy2);}
+#more-ov{display:none;position:fixed;inset:0;z-index:198;background:rgba(0,0,0,.38);}
+@media(max-width:768px){#mnav{display:block;}}
+
+/* ── PRINT ── */
+@media print{#sb,#main .topbar,.no-print{display:none!important;}#main{margin:0;}.content{padding:0;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="lg" style="display:block;">
+  <div class="lg-bg">
+    <div class="lg-card">
+      <div class="lg-icon">🔧</div>
+      <h1 id="lg-nombre">WILLISMAR</h1>
+      <p id="lg-sub">Servicio Técnico & Trabajos Académicos</p>
+      <input type="password" id="lg-pass" placeholder="••••••" autocomplete="current-password">
+      <div id="lg-err" class="lg-err">Clave incorrecta</div>
+      <button class="lg-btn" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+<!-- SIDEBAR -->
+<div id="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-top">
+      <div class="sb-icon">🔧</div>
+      <div><h1 id="sb-nombre">WILLISMAR</h1></div>
+    </div>
+    <p id="sb-slogan">Servicio Técnico & Académico</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-sec">Principal</div>
+    <div class="ni active" onclick="showPage('dashboard')"><span class="ico">🏠</span> Dashboard</div>
+    <div class="ni" onclick="showPage('ordenes')"><span class="ico">📋</span> Órdenes de Trabajo</div>
+    <div class="ni" onclick="showPage('custodia')"><span class="ico">🏭</span> Custodia de Equipos</div>
+    <div class="nav-sec">Gestión</div>
+    <div class="ni" onclick="showPage('clientes')"><span class="ico">👥</span> Clientes</div>
+    <div class="ni" onclick="showPage('stock')"><span class="ico">📦</span> Inventario</div>
+    <div class="ni" onclick="showPage('compras')"><span class="ico">🛒</span> Compras / Envíos</div>
+    <div class="nav-sec">Otros</div>
+    <div class="ni" onclick="showPage('facturas')"><span class="ico">🧾</span> Facturas / IVA</div>
+    <div class="ni" onclick="showPage('config')"><span class="ico">⚙️</span> Configuración</div>
+    <div class="ni" onclick="doLogout()"><span class="ico">🚪</span> Salir</div>
+  </nav>
+  <div class="sb-foot"><span id="sb-foot-n">WILLISMAR</span> v4.0</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <h2 id="page-title">🏠 Dashboard</h2>
+    </div>
+    <div class="topbar-r">
+      <span id="fecha-top" style="font-size:.72rem;color:var(--tx2);font-weight:600;"></span>
+      <span id="sync-st" style="font-size:.68rem;color:var(--tx2);font-weight:700;background:var(--gr);padding:3px 9px;border-radius:18px;">☁️ Local</span>
+      <span class="badge" id="badge-pend">0 activas</span>
+    </div>
+  </div>
+  <div class="content">
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="kpi-grid">
+      <div class="kpi ka"><h3>Hoy</h3><div class="num" id="dc-hoy">0</div><div class="kpi-sub">Órdenes del día</div></div>
+      <div class="kpi"><h3>En Proceso</h3><div class="num" id="dc-act">0</div><div class="kpi-sub">Pendientes + proceso</div></div>
+      <div class="kpi kv"><h3>Entregadas</h3><div class="num" id="dc-ent">0</div><div class="kpi-sub">Cobradas + entregadas</div></div>
+      <div class="kpi kc"><h3>Clientes</h3><div class="num" id="dc-cli">0</div><div class="kpi-sub">Registrados</div></div>
+      <div class="kpi km"><h3>Facturas</h3><div class="num" id="dc-fact">0</div><div class="kpi-sub">Emitidas con IVA</div></div>
+      <div class="kpi kr"><h3>Custodia</h3><div class="num" id="dc-cust">0</div><div class="kpi-sub">Equipos en local</div></div>
+    </div>
+    <div class="dash-grid">
+      <div>
+        <div class="panel">
+          <div class="panel-hdr">📋 Últimas Órdenes
+            <button class="ph-btn" onclick="showPage('ordenes');abrirModalOrden()">+ Nueva Orden</button>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <div class="tbl-wrap">
+              <table><thead><tr><th>#</th><th>Cliente</th><th>Tipo</th><th>Estado</th><th>Total</th><th>Fecha</th></tr></thead>
+              <tbody id="db-ord-body"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-side">
+        <div class="mp">
+          <div class="mph">⚠️ Stock Bajo</div>
+          <div class="mpb" id="db-stock"><p style="color:#aaa;font-size:.8rem;">Sin alertas ✅</p></div>
+        </div>
+        <div class="mp">
+          <div class="mph">🏭 Custodia próxima a vencer
+            <button onclick="showPage('custodia')" style="background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;font-size:.68rem;font-weight:700;">Ver →</button>
+          </div>
+          <div class="mpb" id="db-cust"><p style="color:#aaa;font-size:.8rem;">Sin alertas</p></div>
+        </div>
+        <div class="mp">
+          <div class="mph">🛒 Compras recientes</div>
+          <div class="mpb" id="db-comp"><p style="color:#aaa;font-size:.8rem;">Sin compras</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÓRDENES (unificadas) -->
+  <div id="page-ordenes" class="page">
+    <div class="panel">
+      <div class="panel-hdr">
+        📋 Órdenes de Trabajo
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div class="vtoggle">
+            <button class="vbtn active" id="vbtn-c" onclick="toggleVista('cards')">🃏 Tarjetas</button>
+            <button class="vbtn" id="vbtn-t" onclick="toggleVista('tabla')">📊 Tabla</button>
+          </div>
+          <button class="ph-btn" onclick="abrirModalOrden()">+ Nueva Orden</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="sb">
+          <input type="text" id="buscador-ord" placeholder="🔍 Buscar cliente, equipo, tema..." oninput="filtrarOrdenes()">
+          <select id="f-estado" onchange="filtrarOrdenes()">
+            <option value="">Todos los estados</option>
+            <option>Pendiente</option><option>En Proceso</option><option>Listo</option><option>Entregado</option><option>Cobrado</option>
+          </select>
+          <select id="f-tipo-ord" onchange="filtrarOrdenes()">
+            <option value="">Todo tipo</option>
+            <option value="equipo">🔧 Reparación Equipo</option>
+            <option value="academico">🎓 Trabajo Académico</option>
+          </select>
+        </div>
+        <div id="vista-cards">
+          <div class="cards-grid" id="ord-cards"></div>
+        </div>
+        <div id="vista-tabla" style="display:none;">
+          <div class="tbl-wrap">
+            <table><thead><tr><th>#</th><th>Fecha</th><th>Tipo</th><th>Cliente</th><th>Descripción</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead>
+            <tbody id="ord-tbody"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACTURAS -->
+  <div id="page-facturas" class="page">
+    <div class="panel">
+      <div class="panel-hdr">🧾 Facturas Emitidas con IVA</div>
+      <div class="panel-body">
+        <div class="sb"><input type="text" id="buscar-fact" placeholder="🔍 Buscar cliente, N° factura..." oninput="filtrarFacturas()"></div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Fact.#</th><th>Fecha</th><th>Cliente</th><th>Cédula</th><th>Orden</th><th>Base</th><th>IVA</th><th>Total</th><th>Acc.</th></tr></thead>
+          <tbody id="facturas-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTES -->
+  <div id="page-clientes" class="page">
+    <div class="panel">
+      <div class="panel-hdr">👥 Clientes <button class="ph-btn" onclick="abrirModalCliente()">+ Nuevo Cliente</button></div>
+      <div class="panel-body">
+        <div class="sb"><input type="text" id="buscar-cli" placeholder="🔍 Buscar nombre, cédula, teléfono..." oninput="filtrarClientes()"></div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>#</th><th>Nombre</th><th>Cédula/RUC</th><th>Teléfono</th><th>Correo</th><th>Órdenes</th><th>Acciones</th></tr></thead>
+          <tbody id="clientes-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STOCK -->
+  <div id="page-stock" class="page">
+    <div class="panel">
+      <div class="panel-hdr">📦 Inventario <button class="ph-btn" onclick="abrirModalStock()">+ Agregar</button></div>
+      <div class="panel-body">
+        <div class="sb">
+          <input type="text" id="buscar-stk" placeholder="🔍 Buscar repuesto, código..." oninput="filtrarStock()">
+          <select id="f-stk-cat" onchange="filtrarStock()">
+            <option value="">Todas las categorías</option>
+            <option>Repuesto</option><option>Accesorio</option><option>Tóner/Tinta</option><option>Herramienta</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Código</th><th>Descripción</th><th>Categoría</th><th>Costo</th><th>Precio</th><th>Stock</th><th>Mín.</th><th>Acciones</th></tr></thead>
+          <tbody id="stock-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPRAS -->
+  <div id="page-compras" class="page">
+    <div class="panel">
+      <div class="panel-hdr">🛒 Compras y Envíos <button class="ph-btn" onclick="abrirModalCompra()">+ Nueva Compra</button></div>
+      <div class="panel-body">
+        <div class="sb">
+          <input type="text" id="buscar-cmp" placeholder="🔍 Buscar proveedor, producto..." oninput="filtrarCompras()">
+          <select id="f-cmp-est" onchange="filtrarCompras()">
+            <option value="">Todos</option><option>Pedido</option><option>En Tránsito</option><option>Recibido</option>
+          </select>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>#</th><th>Fecha</th><th>Proveedor</th><th>Descripción</th><th>Monto</th><th>Estado</th><th>Guía</th><th>Acciones</th></tr></thead>
+          <tbody id="compras-body"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTODIA -->
+  <div id="page-custodia" class="page">
+    <div class="panel">
+      <div class="panel-hdr">🏭 Custodia de Equipos <button class="ph-btn" onclick="abrirModalCustodia()">+ Registrar Equipo</button></div>
+      <div class="panel-body">
+        <div class="sb">
+          <input type="text" id="buscar-cust" placeholder="🔍 Buscar cliente, equipo..." oninput="filtrarCustodia()">
+          <select id="f-cust-est" onchange="filtrarCustodia()">
+            <option value="">Todos</option><option>En Custodia</option><option>Notificado</option><option>Retirado</option><option>Dado de Baja</option>
+          </select>
+        </div>
+        <p style="font-size:.71rem;color:var(--tx2);margin-bottom:10px;">🟡 Próximo a vencer (75+ días) &nbsp;🔴 Dado de Baja (90+ días)</p>
+        <div class="cards-grid" id="cust-cards"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div id="page-config" class="page">
+    <div class="panel" style="max-width:700px;">
+      <div class="panel-hdr">⚙️ Configuración del Negocio</div>
+      <div class="panel-body">
+        <div id="cfg-al" class="al"></div>
+        <div class="fg">
+          <div class="f"><label>Nombre del Negocio</label><input id="cfg-nombre" placeholder="WILLISMAR"></div>
+          <div class="f"><label>Subtítulo</label><input id="cfg-sub" placeholder="SERVICIO TÉCNICO & TRABAJOS ACADÉMICOS"></div>
+          <div class="f"><label>RUC</label><input id="cfg-ruc" placeholder="0917037038"></div>
+          <div class="f"><label>Teléfono</label><input id="cfg-tel" placeholder="0978630009"></div>
+          <div class="f"><label>Ciudad</label><input id="cfg-ciudad" placeholder="Bucay, Guayas"></div>
+          <div class="f"><label>Correo</label><input id="cfg-correo" placeholder="wepmar10@gmail.com"></div>
+          <div class="f"><label>IVA (%)</label><input id="cfg-iva" type="number" value="15" min="0" max="100"></div>
+          <div class="f"><label>Nueva Clave</label><input id="cfg-clave" type="password" placeholder="Dejar vacío = no cambiar"></div>
+          <div class="f ff">
+            <label>Datos para QR de Firma <span style="font-weight:400;color:var(--tx2);">(aparece en los comprobantes)</span></label>
+            <textarea id="cfg-qr" rows="2" placeholder="WILLISMAR | Tel: 0978630009 | Bucay, Guayas | wepmar10@gmail.com"></textarea>
+            <p style="font-size:.68rem;color:var(--tx2);margin-top:3px;">💡 Este texto aparece como QR entre las firmas del comprobante. En lugar de firma manual.</p>
+          </div>
+        </div>
+        <div class="btn-g">
+          <button class="btn btn-az" onclick="guardarConfig()">💾 Guardar Configuración</button>
+        </div>
+        <hr style="margin:20px 0;border:none;border-top:1px solid var(--gr2);">
+        <div id="bk-al" class="al"></div>
+        <h4 style="font-size:.83rem;font-weight:800;margin-bottom:11px;">💾 Respaldo de Datos</h4>
+        <div class="btn-g">
+          <button class="btn btn-vd" onclick="respaldar()">⬇️ Descargar Respaldo</button>
+          <label class="btn btn-gh" style="cursor:pointer;">📂 Restaurar Datos <input type="file" accept=".json" style="display:none;" onchange="restaurar(event)"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══ MODALES ═══ -->
+
+<!-- MODAL ORDEN (unificado) -->
+<div class="mo" id="m-orden">
+<div class="mc" style="max-width:820px;">
+  <div class="mh"><h3>📋 <span id="m-ord-title">Nueva Orden de Trabajo</span></h3><button class="mc-close" onclick="cerrar('m-orden')">×</button></div>
+  <div class="mb">
+    <!-- Selector tipo -->
+    <div id="tipo-sel-wrap">
+      <p style="font-size:.78rem;color:var(--tx2);margin-bottom:10px;font-weight:700;">¿Qué tipo de orden es?</p>
+      <div class="tipo-selector">
+        <div class="tipo-btn" id="tb-eq" onclick="selTipo('equipo')">
+          <span class="tb-ico">🔧</span>
+          <div class="tb-txt">Reparación de Equipo</div>
+          <div class="tb-sub">Laptop, PC, Impresora, etc.</div>
+        </div>
+        <div class="tipo-btn" id="tb-ac" onclick="selTipo('academico')">
+          <span class="tb-ico">🎓</span>
+          <div class="tb-txt">Trabajo Académico</div>
+          <div class="tb-sub">Tesis, tareas, proyectos, etc.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campos comunes -->
+    <div id="campos-comunes" style="display:none;margin-top:14px;">
+      <div class="fg">
+        <div class="f"><label>Cliente *</label><select id="ord-cliente"><option value="">-- Seleccionar --</option></select></div>
+        <div class="f"><label>Estado</label>
+          <select id="ord-estado"><option>Pendiente</option><option>En Proceso</option><option>Listo</option><option>Entregado</option><option>Cobrado</option></select>
+        </div>
+        <div class="f"><label>Forma de Pago</label>
+          <select id="ord-pago"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option></select>
+        </div>
+        <div class="f"><label>Anticipo ($)</label><input id="ord-anticipo" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+    </div>
+
+    <!-- Campos EQUIPO -->
+    <div id="campos-equipo" style="display:none;margin-top:10px;">
+      <hr style="border:none;border-top:1px solid var(--gr2);margin-bottom:12px;">
+      <div class="fg">
+        <div class="f"><label>Tipo de Equipo</label>
+          <select id="ord-tipo-eq">
+            <option>LAPTOP</option><option>PC ESCRITORIO</option><option>IMPRESORA</option>
+            <option>IMPRESORA MULTIFUNCION</option><option>MONITOR</option><option>TABLET</option><option>CELULAR</option><option>OTRO</option>
+          </select>
+        </div>
+        <div class="f"><label>Marca</label><input id="ord-marca" placeholder="HP, DELL, CANON, EPSON..."></div>
+        <div class="f"><label>Modelo</label><input id="ord-modelo" placeholder="ej. Pavilion 15, L3150"></div>
+        <div class="f"><label>Nº Serie</label><input id="ord-serie" placeholder="Opcional"></div>
+        <div class="f ff"><label>Falla Reportada</label><input id="ord-falla" placeholder="Describe la falla que reporta el cliente"></div>
+        <div class="f ff"><label>Observaciones</label><textarea id="ord-obs" rows="2" placeholder="Accesorios, condición del equipo..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- Campos ACADÉMICO -->
+    <div id="campos-acad" style="display:none;margin-top:10px;">
+      <hr style="border:none;border-top:1px solid var(--gr2);margin-bottom:12px;">
+      <div class="fg">
+        <div class="f"><label>Tipo de Trabajo *</label>
+          <select id="acad-tipo">
+            <option>Tesis</option><option>Tesina</option><option>Monografía</option><option>Ensayo</option>
+            <option>Presentación PowerPoint</option><option>Trabajo de Grado</option><option>Informe</option>
+            <option>Proyecto</option><option>Tarea</option><option>Artículo Científico</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="f"><label>Fecha de Entrega</label><input id="acad-entrega" type="date"></div>
+        <div class="f ff"><label>Tema / Título del Trabajo *</label><input id="acad-tema" placeholder="Ej: Impacto de las redes sociales en jóvenes universitarios"></div>
+        <div class="f"><label>Universidad / Institución</label><input id="acad-univ" placeholder="Ej: ESPOCH, UNACH, UTB..."></div>
+        <div class="f"><label>Materia / Carrera</label><input id="acad-mat" placeholder="Ej: Administración de Empresas"></div>
+        <div class="f"><label>Páginas / Diapositivas</label><input id="acad-pags" type="number" min="1" placeholder="Ej: 30"></div>
+        <div class="f ff"><label>Instrucciones / Requisitos</label><textarea id="acad-inst" rows="2" placeholder="Normas APA, número de referencias, especificaciones del docente..."></textarea></div>
+      </div>
+      <!-- Archivo -->
+      <div style="margin-top:12px;padding:13px;background:#faf5ff;border:2px solid #c4b5fd;border-radius:11px;">
+        <h4 style="font-size:.8rem;font-weight:800;color:#5b21b6;margin-bottom:10px;">📁 Archivo del Trabajo Terminado</h4>
+        <div class="fu-box" id="fu-wrap" onclick="document.getElementById('acad-archivo').click()">
+          <div id="fu-label">📄 Clic para subir el archivo (Word, PDF, PPT, ZIP...)</div>
+          <input type="file" id="acad-archivo" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar,.xls,.xlsx" style="display:none;" onchange="subirArchivoAcad(this)">
+        </div>
+        <div id="fu-actual" style="display:none;margin-top:7px;padding:7px 11px;background:#ede9fe;border-radius:7px;font-size:.77rem;color:#5b21b6;display:flex;align-items:center;justify-content:space-between;">
+          <span id="fu-nombre">—</span>
+          <button onclick="limpiarArchivoAcad()" style="background:none;border:none;cursor:pointer;color:#7c3aed;font-weight:800;">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ítems y totales (solo cuando hay tipo seleccionado) -->
+    <div id="campos-items" style="display:none;margin-top:14px;">
+      <hr style="border:none;border-top:1px solid var(--gr2);margin-bottom:12px;">
+      <div class="items-area">
+        <table id="tbl-items">
+          <thead><tr><th style="width:38%">Servicio / Repuesto</th><th style="width:13%">Código</th><th style="width:15%">P.Unit ($)</th><th style="width:10%">Cant.</th><th style="width:14%">Subtotal</th><th style="width:10%">Acc.</th></tr></thead>
+          <tbody id="items-body"></tbody>
+        </table>
+        <button class="btn btn-sm btn-az no-print" style="margin-top:7px;" onclick="addItemRow()">+ Agregar línea</button>
+      </div>
+      <div class="tots">
+        <div class="fila"><span>Subtotal:</span><strong id="tot-sub">$0.00</strong></div>
+        <div class="fila" id="fila-iva" style="display:none;"><span id="lbl-iva">IVA (15%):</span><strong id="tot-iva">$0.00</strong></div>
+        <div class="fila total"><span>TOTAL:</span><span id="tot-total">$0.00</span></div>
+      </div>
+      <div class="iva-box">
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-weight:700;font-size:.83rem;color:var(--az);">
+          <input type="checkbox" id="ord-factura" onchange="toggleFactura()"> 🧾 Cliente pide factura con IVA
+        </label>
+        <div id="factura-opts" style="display:none;">
+          <p style="font-size:.73rem;color:var(--tx2);margin:9px 0 7px;">¿Cómo manejar el IVA?</p>
+          <div class="iva-radios">
+            <label class="iva-r"><input type="radio" name="iva-modo" value="agregar" checked onchange="calcTotales()"><span><strong>Agregar IVA</strong><br><small style="color:#888;">$100 + 15% = $115</small></span></label>
+            <label class="iva-r"><input type="radio" name="iva-modo" value="incluido" onchange="calcTotales()"><span><strong>IVA incluido</strong><br><small style="color:#888;">$100 ya incluye IVA</small></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-az" onclick="guardarOrden()">💾 Guardar Orden</button>
+    <button class="btn btn-gh" onclick="cerrar('m-orden')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL FACTURA VER -->
+<div class="mo" id="m-factura">
+<div class="mc" style="max-width:620px;">
+  <div class="mh"><h3>🧾 Factura</h3><button class="mc-close" onclick="cerrar('m-factura')">×</button></div>
+  <div class="mb" id="fact-contenido"></div>
+  <div class="mf">
+    <button class="btn btn-az no-print" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn btn-gh" onclick="cerrar('m-factura')">Cerrar</button>
+  </div>
+</div></div>
+
+<!-- MODAL CLIENTE -->
+<div class="mo" id="m-cliente">
+<div class="mc" style="max-width:530px;">
+  <div class="mh"><h3>👥 <span id="m-cli-title">Nuevo Cliente</span></h3><button class="mc-close" onclick="cerrar('m-cliente')">×</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="f"><label>Nombre Completo *</label><input id="cli-nombre" placeholder="Nombre completo"></div>
+      <div class="f"><label>Cédula / RUC</label><input id="cli-ced" placeholder="0604XXXXXXX"></div>
+      <div class="f"><label>Teléfono</label><input id="cli-tel" placeholder="09XX-XXX-XXX"></div>
+      <div class="f"><label>Correo</label><input id="cli-correo" placeholder="correo@ejemplo.com"></div>
+      <div class="f ff"><label>Dirección</label><input id="cli-dir" placeholder="Ciudad, barrio, referencia..."></div>
+      <div class="f ff"><label>Notas</label><textarea id="cli-notas" rows="2" placeholder="Notas adicionales..."></textarea></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-az" onclick="guardarCliente()">💾 Guardar</button>
+    <button class="btn btn-gh" onclick="cerrar('m-cliente')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL STOCK -->
+<div class="mo" id="m-stock">
+<div class="mc" style="max-width:520px;">
+  <div class="mh"><h3>📦 <span id="m-stk-title">Agregar Repuesto</span></h3><button class="mc-close" onclick="cerrar('m-stock')">×</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="f"><label>Código</label><input id="stk-cod" placeholder="ej. REP-001"></div>
+      <div class="f"><label>Categoría</label>
+        <select id="stk-cat"><option>Repuesto</option><option>Accesorio</option><option>Tóner/Tinta</option><option>Herramienta</option><option>Otro</option></select>
+      </div>
+      <div class="f ff"><label>Descripción *</label><input id="stk-desc" placeholder="Nombre del repuesto o accesorio"></div>
+      <div class="f"><label>Precio Costo ($)</label><input id="stk-costo" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="f"><label>Precio Venta ($)</label><input id="stk-pvp" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="f"><label>Stock Actual</label><input id="stk-qty" type="number" min="0" value="0"></div>
+      <div class="f"><label>Stock Mínimo</label><input id="stk-min" type="number" min="0" value="2"></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-az" onclick="guardarStock()">💾 Guardar</button>
+    <button class="btn btn-gh" onclick="cerrar('m-stock')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL COMPRA -->
+<div class="mo" id="m-compra">
+<div class="mc" style="max-width:620px;">
+  <div class="mh"><h3>🛒 <span id="m-cmp-title">Nueva Compra</span></h3><button class="mc-close" onclick="cerrar('m-compra')">×</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="f"><label>Proveedor *</label><input id="cmp-prov" placeholder="Nombre tienda o proveedor"></div>
+      <div class="f"><label>Fecha</label><input id="cmp-fecha" type="date"></div>
+      <div class="f ff"><label>Producto(s) / Descripción</label><textarea id="cmp-desc" rows="3" placeholder="Lista de productos, referencias, etc."></textarea></div>
+      <div class="f"><label>Monto Total ($)</label><input id="cmp-monto" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      <div class="f"><label>Forma de Pago</label><select id="cmp-pago"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Crédito</option></select></div>
+      <div class="f"><label>Estado</label><select id="cmp-est"><option>Pedido</option><option>En Tránsito</option><option>Recibido</option></select></div>
+    </div>
+    <div class="envio-box">
+      <h4>📦 Envío Servientrega (opcional)</h4>
+      <div class="fg" style="margin-top:5px;">
+        <div class="f"><label>Código de Guía</label><input id="cmp-guia" placeholder="ej. 9876543210" oninput="updGuia()"></div>
+        <div class="f"><label>Observaciones Envío</label><input id="cmp-envio-obs" placeholder="Fecha estimada, origen..."></div>
+      </div>
+      <div style="margin-top:9px;" id="guia-wrap" style="display:none;">
+        <a id="guia-link" class="guia-link" target="_blank" href="#">🔍 Rastrear en Servientrega</a>
+      </div>
+    </div>
+    <div class="f ff" style="margin-top:11px;"><label>Notas</label><textarea id="cmp-notas" rows="2" placeholder="Notas adicionales..."></textarea></div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-az" onclick="guardarCompra()">💾 Guardar</button>
+    <button class="btn btn-gh" onclick="cerrar('m-compra')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL CUSTODIA -->
+<div class="mo" id="m-custodia">
+<div class="mc" style="max-width:630px;">
+  <div class="mh"><h3>🏭 <span id="m-cust-title">Registrar Equipo en Custodia</span></h3><button class="mc-close" onclick="cerrar('m-custodia')">×</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="f"><label>Cliente</label><select id="cust-cli"><option value="">-- Seleccionar --</option></select></div>
+      <div class="f"><label>Tipo Equipo</label>
+        <select id="cust-tipo"><option>LAPTOP</option><option>PC ESCRITORIO</option><option>IMPRESORA</option><option>IMPRESORA MULTIFUNCION</option><option>MONITOR</option><option>TABLET</option><option>CELULAR</option><option>OTRO</option></select>
+      </div>
+      <div class="f"><label>Marca</label><input id="cust-marca" placeholder="HP, CANON..."></div>
+      <div class="f"><label>Modelo</label><input id="cust-modelo" placeholder="ej. 4650"></div>
+      <div class="f"><label>Serie</label><input id="cust-serie"></div>
+      <div class="f"><label>Estado</label><select id="cust-est-eq"><option>En Custodia</option><option>Notificado</option><option>Retirado</option><option>Dado de Baja</option></select></div>
+      <div class="f"><label>Fecha Ingreso</label><input id="cust-fecha" type="date"></div>
+      <div class="f"><label>Orden de Referencia #</label><input id="cust-ref" placeholder="# Orden relacionada"></div>
+      <div class="f ff"><label>📷 Foto del Equipo</label><input id="cust-foto" type="file" accept="image/*" onchange="prevFoto(this)"></div>
+      <div id="cust-foto-prev-wrap" style="display:none;"><img id="cust-foto-prev" style="max-height:140px;border-radius:8px;border:2px solid var(--gr2);margin-top:5px;"></div>
+      <div class="f ff"><label>Observaciones</label><textarea id="cust-obs" rows="2" placeholder="Estado, accesorios, notas..."></textarea></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-az" onclick="guardarCustodia()">💾 Guardar</button>
+    <button class="btn btn-gh" onclick="cerrar('m-custodia')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- MODAL FOTO grande -->
+<div class="mo" id="m-foto">
+<div class="mc" style="max-width:440px;text-align:center;">
+  <div class="mh"><h3>📷 Foto del Equipo</h3><button class="mc-close" onclick="cerrar('m-foto')">×</button></div>
+  <div class="mb"><img id="foto-grande" src="" style="max-width:100%;border-radius:10px;"></div>
+</div></div>
+
+<!-- OVERLAY MÁS -->
+<div id="more-ov" onclick="cerrarMore()"></div>
+<div id="more-menu">
+  <div style="text-align:center;margin-bottom:11px;"><span style="color:rgba(255,255,255,.28);font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;">Más módulos</span></div>
+  <div class="mg">
+    <button class="mi2" onclick="showPageM('facturas')"><span class="ico">🧾</span>Facturas</button>
+    <button class="mi2" onclick="showPageM('stock')"><span class="ico">📦</span>Inventario</button>
+    <button class="mi2" onclick="showPageM('compras')"><span class="ico">🛒</span>Compras</button>
+    <button class="mi2" onclick="showPageM('config')"><span class="ico">⚙️</span>Config</button>
+    <button class="mi2" onclick="doLogout()"><span class="ico">🚪</span>Salir</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV MOBILE -->
+<div id="mnav">
+  <div class="mi">
+    <button class="mb2 active" id="mnav-dashboard" onclick="showPageM('dashboard')"><span class="ico">🏠</span>Inicio</button>
+    <button class="mb2" id="mnav-ordenes" onclick="showPageM('ordenes')"><span class="ico">📋</span>Órdenes</button>
+    <button class="mb2" id="mnav-clientes" onclick="showPageM('clientes')"><span class="ico">👥</span>Clientes</button>
+    <button class="mb2" id="mnav-custodia" onclick="showPageM('custodia')"><span class="ico">🏭</span>Custodia</button>
+    <button class="mb2" id="mnav-more" onclick="toggleMore()"><span class="ico">⋯</span>Más</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+// ── FIREBASE ──────────────────────────────────────────────────────────────────
+const fbCfg = {
+  apiKey:"AIzaSyAUvMWFnuaNXmyh7rjvLPNgjtiS0qQWYGM",
+  authDomain:"tecnico-pro.firebaseapp.com",
+  projectId:"tecnico-pro",
+  storageBucket:"tecnico-pro.firebasestorage.app",
+  messagingSenderId:"883534120062",
+  appId:"1:883534120062:web:72b5343763fd1d3582442f"
+};
+firebase.initializeApp(fbCfg);
+const db=firebase.firestore();
+const FB_DOC='willismar_v4';
+
+const ST={
+  get(k){try{return JSON.parse(localStorage.getItem(k)||'[]');}catch{return[];}},
+  set(k,v){localStorage.setItem(k,JSON.stringify(v));fbSave();},
+  getObj(k,d={}){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d));}catch{return d;}},
+  setObj(k,v){localStorage.setItem(k,JSON.stringify(v));fbSave();}
+};
+
+function fbSave(){
+  db.collection('tecnico-pro').doc(FB_DOC).set({
+    ordenes,clientes,stock,compras,facturas,custodia,config,
+    updated:new Date().toISOString()
+  }).then(()=>setSyncSt('☁️ Guardado')).catch(e=>console.warn('fb:',e));
+}
+function fbLoad(){
+  setSyncSt('⏳ Sincronizando...');
+  db.collection('tecnico-pro').doc(FB_DOC).get().then(snap=>{
+    if(snap.exists){
+      const d=snap.data();
+      if(d.ordenes){ordenes=d.ordenes;localStorage.setItem('wp_ord',JSON.stringify(ordenes));}
+      if(d.clientes){clientes=d.clientes;localStorage.setItem('wp_cli',JSON.stringify(clientes));}
+      if(d.stock){stock=d.stock;localStorage.setItem('wp_stk',JSON.stringify(stock));}
+      if(d.compras){compras=d.compras;localStorage.setItem('wp_cmp',JSON.stringify(compras));}
+      if(d.facturas){facturas=d.facturas;localStorage.setItem('wp_fact',JSON.stringify(facturas));}
+      if(d.custodia){custodia=d.custodia;localStorage.setItem('wp_cust',JSON.stringify(custodia));}
+      if(d.config){config=d.config;localStorage.setItem('wp_cfg',JSON.stringify(config));updUI();}
+      actualizarDash();
+      setSyncSt('☁️ Sincronizado');
+    }else{setSyncSt('☁️ Listo');}
+  }).catch(()=>setSyncSt('⚠️ Sin conexión'));
+}
+function setSyncSt(t){const e=document.getElementById('sync-st');if(e)e.textContent=t;}
+
+// ── DATOS ─────────────────────────────────────────────────────────────────────
+let ordenes   = ST.get('wp_ord');
+let clientes  = ST.get('wp_cli');
+let stock     = ST.get('wp_stk');
+let compras   = ST.get('wp_cmp');
+let facturas  = ST.get('wp_fact');
+let custodia  = ST.get('wp_cust');
+let config    = ST.getObj('wp_cfg',{nombre:'WILLISMAR',sub:'Servicio Técnico & Académico',ruc:'',tel:'',ciudad:'Ecuador',correo:'',iva:15,qr:'',clave:'1234'});
+let editIdx   = {ord:null,cli:null,stk:null,cmp:null,cust:null};
+let vistaOrd  = 'cards';
+let tipoOrden = null; // 'equipo' | 'academico'
+let acadArchivoData=null,acadArchivoNombre=null;
+let custFotoData=null;
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function doLogin(){
+  const p=document.getElementById('lg-pass').value;
+  const c=config.clave||'1234';
+  if(p===c){
+    document.getElementById('lg').style.display='none';
+    document.getElementById('app').style.display='block';
+    sessionStorage.setItem('wp_auth','1');
+    updUI();actualizarDash();fbLoad();
+  }else{
+    const i=document.getElementById('lg-pass');
+    const e=document.getElementById('lg-err');
+    i.classList.add('err');e.style.display='block';i.value='';
+    setTimeout(()=>{i.classList.remove('err');e.style.display='none';},2200);
+  }
+}
+function doLogout(){sessionStorage.removeItem('wp_auth');location.reload();}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('fecha-top').textContent=new Date().toLocaleDateString('es-EC',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  updUI();
+  if(sessionStorage.getItem('wp_auth')==='1'){
+    document.getElementById('lg').style.display='none';
+    document.getElementById('app').style.display='block';
+    actualizarDash();fbLoad();
+  }
+  document.getElementById('lg-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
+});
+
+function updUI(){
+  const n=config.nombre||'WILLISMAR';
+  const s=config.sub||'Servicio Técnico & Académico';
+  document.getElementById('sb-nombre').textContent=n;
+  document.getElementById('sb-slogan').textContent=s;
+  document.getElementById('sb-foot-n').textContent=n+' v4.0';
+  document.getElementById('lg-nombre').textContent=n;
+  document.getElementById('lg-sub').textContent=s;
+}
+
+// ── NAVEGACIÓN ────────────────────────────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const el=document.querySelector(`.ni[onclick="showPage('${id}')"]`);
+  if(el)el.classList.add('active');
+  const titles={dashboard:'🏠 Dashboard',ordenes:'📋 Órdenes de Trabajo',facturas:'🧾 Facturas / IVA',clientes:'👥 Clientes',stock:'📦 Inventario',compras:'🛒 Compras / Envíos',custodia:'🏭 Custodia de Equipos',config:'⚙️ Configuración'};
+  document.getElementById('page-title').textContent=titles[id]||id;
+  if(id==='ordenes')renderOrdenes();
+  if(id==='clientes')renderClientes();
+  if(id==='stock')renderStock();
+  if(id==='compras')renderCompras();
+  if(id==='custodia')renderCustodia();
+  if(id==='facturas')renderFacturas();
+  if(id==='config')cargarConfig();
+}
+function showPageM(id){cerrarMore();showPage(id);document.querySelectorAll('.mb2').forEach(b=>b.classList.remove('active'));const btn=document.getElementById('mnav-'+id);if(btn)btn.classList.add('active');}
+function abrir(id){document.getElementById(id).classList.add('show');}
+function cerrar(id){document.getElementById(id).classList.remove('show');}
+function toggleMore(){const m=document.getElementById('more-menu');const o=document.getElementById('more-ov');const open=m.style.display==='block';m.style.display=open?'none':'block';o.style.display=open?'none':'block';}
+function cerrarMore(){document.getElementById('more-menu').style.display='none';document.getElementById('more-ov').style.display='none';}
+function toggleVista(v){vistaOrd=v;document.getElementById('vista-cards').style.display=v==='cards'?'block':'none';document.getElementById('vista-tabla').style.display=v==='tabla'?'block':'none';document.getElementById('vbtn-c').classList.toggle('active',v==='cards');document.getElementById('vbtn-t').classList.toggle('active',v==='tabla');renderOrdenes();}
+function hoy(){return new Date().toISOString().split('T')[0];}
+function llenaClis(sid){const s=document.getElementById(sid);const v=s.value;s.innerHTML='<option value="">-- Seleccionar --</option>';[...clientes].sort((a,b)=>a.nombre.localeCompare(b.nombre,'es')).forEach(c=>{s.innerHTML+=`<option value="${c.id}">${c.nombre}</option>`;});if(v)s.value=v;}
+
+// ── TIPO DE ORDEN (selector) ──────────────────────────────────────────────────
+function selTipo(tipo){
+  tipoOrden=tipo;
+  document.getElementById('tb-eq').classList.toggle('sel-eq',tipo==='equipo');
+  document.getElementById('tb-ac').classList.toggle('sel-ac',tipo==='academico');
+  document.getElementById('tb-eq').classList.toggle('sel-ac',false);
+  document.getElementById('tb-ac').classList.toggle('sel-eq',false);
+  document.getElementById('campos-comunes').style.display='block';
+  document.getElementById('campos-equipo').style.display=tipo==='equipo'?'block':'none';
+  document.getElementById('campos-acad').style.display=tipo==='academico'?'block':'none';
+  document.getElementById('campos-items').style.display='block';
+  if(tipo==='equipo'){addItemRow();}else{document.getElementById('items-body').innerHTML='';addItemRow();}
+  calcTotales();
+}
+
+// ── ÓRDENES (unificadas) ──────────────────────────────────────────────────────
+function abrirModalOrden(idx=null){
+  editIdx.ord=idx;
+  tipoOrden=null;acadArchivoData=null;acadArchivoNombre=null;
+  document.getElementById('m-ord-title').textContent=idx!==null?'Editar Orden':'Nueva Orden de Trabajo';
+  llenaClis('ord-cliente');
+  document.getElementById('items-body').innerHTML='';
+  document.getElementById('ord-factura').checked=false;
+  document.getElementById('factura-opts').style.display='none';
+  document.getElementById('fila-iva').style.display='none';
+  document.getElementById('fu-actual').style.display='none';
+  document.getElementById('fu-label').textContent='📄 Clic para subir el archivo (Word, PDF, PPT, ZIP...)';
+  document.getElementById('fu-wrap').className='fu-box';
+  // Resetear selector tipo
+  document.getElementById('tb-eq').className='tipo-btn';
+  document.getElementById('tb-ac').className='tipo-btn';
+  document.getElementById('campos-comunes').style.display='none';
+  document.getElementById('campos-equipo').style.display='none';
+  document.getElementById('campos-acad').style.display='none';
+  document.getElementById('campos-items').style.display='none';
+  document.getElementById('tipo-sel-wrap').style.display='block';
+
+  if(idx!==null){
+    const o=ordenes[idx];
+    tipoOrden=o.tipoOrden||'equipo';
+    // Mostrar selector en modo edición
+    document.getElementById('tipo-sel-wrap').style.display='block';
+    selTipo(tipoOrden);
+    document.getElementById('ord-cliente').value=o.clienteId||'';
+    document.getElementById('ord-estado').value=o.estado||'Pendiente';
+    document.getElementById('ord-pago').value=o.pago||'Efectivo';
+    document.getElementById('ord-anticipo').value=o.anticipo||0;
+    if(tipoOrden==='equipo'){
+      document.getElementById('ord-tipo-eq').value=o.tipoEq||'LAPTOP';
+      document.getElementById('ord-marca').value=o.marca||'';
+      document.getElementById('ord-modelo').value=o.modelo||'';
+      document.getElementById('ord-serie').value=o.serie||'';
+      document.getElementById('ord-falla').value=o.falla||'';
+      document.getElementById('ord-obs').value=o.obs||'';
+    }else{
+      document.getElementById('acad-tipo').value=o.acadTipo||'Tarea';
+      document.getElementById('acad-entrega').value=o.acadEntrega||'';
+      document.getElementById('acad-tema').value=o.acadTema||'';
+      document.getElementById('acad-univ').value=o.acadUniv||'';
+      document.getElementById('acad-mat').value=o.acadMat||'';
+      document.getElementById('acad-pags').value=o.acadPags||'';
+      document.getElementById('acad-inst').value=o.acadInst||'';
+      if(o.acadArchivoData){acadArchivoData=o.acadArchivoData;acadArchivoNombre=o.acadArchivoNombre;document.getElementById('fu-label').textContent='📄 '+o.acadArchivoNombre;document.getElementById('fu-wrap').className='fu-box has-f';}
+    }
+    document.getElementById('items-body').innerHTML='';
+    (o.items||[]).forEach(it=>addItemRow(it));
+    if(o.conFactura){document.getElementById('ord-factura').checked=true;toggleFactura();}
+    calcTotales();
+  }
+  abrir('m-orden');
+}
+
+function guardarOrden(){
+  if(!tipoOrden){alert('Selecciona el tipo de orden primero.');return;}
+  const cliId=document.getElementById('ord-cliente').value;
+  if(!cliId){alert('Selecciona un cliente.');return;}
+  const cli=clientes.find(c=>c.id===cliId)||{};
+  const items=[];
+  document.querySelectorAll('#items-body tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    if(ins[0]&&ins[0].value.trim()){items.push({desc:ins[0].value,cod:ins[1]?ins[1].value:'',precio:parseFloat(ins[2]?ins[2].value:0)||0,cant:parseInt(ins[3]?ins[3].value:1)||1});}
+  });
+  const total=parseFloat(document.getElementById('tot-total').textContent.replace('$',''))||0;
+  const sub=parseFloat(document.getElementById('tot-sub').textContent.replace('$',''))||0;
+  const ivaAmt=parseFloat(document.getElementById('tot-iva').textContent.replace('$',''))||0;
+  const conFact=document.getElementById('ord-factura').checked;
+  const o={
+    id: editIdx.ord!==null?ordenes[editIdx.ord].id:'ORD'+Date.now(),
+    num: editIdx.ord!==null?ordenes[editIdx.ord].num:(ordenes.length+1),
+    fecha:hoy(),clienteId:cliId,clienteNombre:cli.nombre||'',
+    estado:document.getElementById('ord-estado').value,
+    pago:document.getElementById('ord-pago').value,
+    anticipo:parseFloat(document.getElementById('ord-anticipo').value)||0,
+    tipoOrden,items,total,sub,ivaAmt,conFactura:conFact,
+  };
+  if(tipoOrden==='equipo'){
+    o.tipoEq=document.getElementById('ord-tipo-eq').value;
+    o.marca=document.getElementById('ord-marca').value;
+    o.modelo=document.getElementById('ord-modelo').value;
+    o.serie=document.getElementById('ord-serie').value;
+    o.falla=document.getElementById('ord-falla').value;
+    o.obs=document.getElementById('ord-obs').value;
+  }else{
+    o.acadTipo=document.getElementById('acad-tipo').value;
+    o.acadEntrega=document.getElementById('acad-entrega').value;
+    o.acadTema=document.getElementById('acad-tema').value;
+    o.acadUniv=document.getElementById('acad-univ').value;
+    o.acadMat=document.getElementById('acad-mat').value;
+    o.acadPags=document.getElementById('acad-pags').value;
+    o.acadInst=document.getElementById('acad-inst').value;
+    o.acadArchivoData=acadArchivoData;
+    o.acadArchivoNombre=acadArchivoNombre;
+    if(!o.acadTema){alert('El tema del trabajo es obligatorio.');return;}
+  }
+  if(editIdx.ord!==null)ordenes[editIdx.ord]=o;
+  else ordenes.push(o);
+  // Factura
+  if(conFact&&(o.estado==='Cobrado'||o.estado==='Entregado')){
+    const fIdx=facturas.findIndex(f=>f.ordenId===o.id);
+    const f={id:fIdx>=0?facturas[fIdx].id:'FACT'+Date.now(),num:fIdx>=0?facturas[fIdx].num:(facturas.length+1),fecha:o.fecha,ordenId:o.id,ordenNum:o.num,clienteNombre:o.clienteNombre,clienteCedula:cli.cedula||'',base:sub,ivaAmt,total,items:o.items};
+    if(fIdx>=0)facturas[fIdx]=f;else facturas.push(f);
+    ST.set('wp_fact',facturas);
+  }
+  ST.set('wp_ord',ordenes);
+  cerrar('m-orden');
+  renderOrdenes();actualizarDash();
+}
+
+function eliminarOrden(idx){if(!confirm('¿Eliminar esta orden?'))return;ordenes.splice(idx,1);ST.set('wp_ord',ordenes);renderOrdenes();actualizarDash();}
+
+function renderOrdenes(lista=null){
+  const data=lista||[...ordenes].reverse();
+  const estCls={'Pendiente':'est-p','En Proceso':'est-e','Listo':'est-l','Entregado':'est-d','Cobrado':'est-c'};
+  const cardCls={'Pendiente':'sp','En Proceso':'se','Listo':'sl','Entregado':'sd','Cobrado':'sc'};
+  // Cards
+  const gc=document.getElementById('ord-cards');
+  gc.innerHTML=data.length===0?'<p style="color:#aaa;padding:20px;font-size:.85rem;">Sin órdenes registradas. ¡Crea la primera!</p>':'';
+  data.forEach((o,i)=>{
+    const idx=ordenes.indexOf(o);
+    const esAcad=o.tipoOrden==='academico';
+    const titulo=esAcad?(o.acadTema||'Trabajo Académico'):(o.tipoEq||'Equipo');
+    const sub2=esAcad?`${o.acadTipo||'Académico'} · ${o.acadUniv||''}`:`${o.marca||''} ${o.modelo||''}`;
+    const desc=esAcad?(o.acadMat||o.acadInst||'—'):(o.falla||'—');
+    const saldo=(o.total||0)-(o.anticipo||0);
+    const wa=clientes.find(c=>c.id===o.clienteId);
+    const waLink=wa&&wa.tel?`<a class="wa-btn" href="https://wa.me/593${wa.tel.replace(/[^0-9]/g,'').replace(/^0/,'')}?text=${encodeURIComponent('Hola '+o.clienteNombre+', su orden #'+o.num+' está: '+o.estado+'.')}" target="_blank">💬</a>`:'';
+    gc.innerHTML+=`<div class="ord-card ${cardCls[o.estado]||''} ${esAcad?'sacad':''}">
+      <div class="oc-hdr">
+        <div>
+          <div class="oc-num">#${o.num} · ${o.fecha}</div>
+          <div><span class="tipo-tag ${esAcad?'':'eq'}">${esAcad?'🎓 Académico':'🔧 Equipo'}</span></div>
+          <div class="oc-titulo">${titulo}</div>
+          <div class="oc-sub">${sub2}</div>
+        </div>
+        <span class="est ${estCls[o.estado]||''}">${o.estado}</span>
+      </div>
+      <div class="oc-body">
+        <div class="oc-cli">👤 ${o.clienteNombre} ${waLink}</div>
+        <div class="oc-desc">${desc}</div>
+      </div>
+      <div class="oc-foot">
+        <div>
+          <div class="oc-total">$${(o.total||0).toFixed(2)}</div>
+          ${o.anticipo?`<div style="font-size:.65rem;color:var(--tx2);">Saldo: $${saldo.toFixed(2)}</div>`:''}
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          ${esAcad&&o.acadArchivoData?`<button class="btn btn-vd btn-sm" onclick="descArch(${idx})" title="Descargar archivo">⬇️</button>`:''}
+          <button class="btn btn-cy btn-sm" onclick="imprimirOrden(${idx})">🖨️</button>
+          <button class="btn btn-az btn-sm" onclick="abrirModalOrden(${idx})">✏️</button>
+          <button class="btn btn-ro btn-sm" onclick="eliminarOrden(${idx})">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  // Tabla
+  const tb=document.getElementById('ord-tbody');
+  tb.innerHTML=data.length===0?'<tr><td colspan="8" style="text-align:center;color:#aaa;padding:18px;">Sin órdenes</td></tr>':'';
+  data.forEach(o=>{
+    const idx=ordenes.indexOf(o);
+    const esAcad=o.tipoOrden==='academico';
+    const desc=esAcad?(o.acadTema||'—'):(o.falla||'—');
+    tb.innerHTML+=`<tr>
+      <td><strong>#${o.num}</strong></td>
+      <td>${o.fecha}</td>
+      <td><span class="tipo-tag ${esAcad?'':'eq'}">${esAcad?'🎓 Acad':'🔧 Equipo'}</span></td>
+      <td>${o.clienteNombre}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${desc}">${desc}</td>
+      <td><span class="est ${{'Pendiente':'est-p','En Proceso':'est-e','Listo':'est-l','Entregado':'est-d','Cobrado':'est-c'}[o.estado]||''}">${o.estado}</span></td>
+      <td><strong>$${(o.total||0).toFixed(2)}</strong></td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-cy btn-sm" onclick="imprimirOrden(${idx})">🖨️</button>
+        <button class="btn btn-az btn-sm" onclick="abrirModalOrden(${idx})">✏️</button>
+        <button class="btn btn-ro btn-sm" onclick="eliminarOrden(${idx})">🗑️</button>
+      </td></tr>`;
+  });
+}
+
+function filtrarOrdenes(){
+  const q=document.getElementById('buscador-ord').value.toLowerCase();
+  const est=document.getElementById('f-estado').value;
+  const tipo=document.getElementById('f-tipo-ord').value;
+  renderOrdenes(ordenes.filter(o=>{
+    const m=!q||(o.clienteNombre+(o.tipoEq||'')+(o.marca||'')+(o.falla||'')+(o.acadTema||'')+(o.acadTipo||'')).toLowerCase().includes(q);
+    return m&&(!est||o.estado===est)&&(!tipo||o.tipoOrden===tipo);
+  }));
+}
+
+function descArch(idx){
+  const o=ordenes[idx];
+  if(!o.acadArchivoData){alert('No hay archivo.');return;}
+  const a=document.createElement('a');a.href=o.acadArchivoData;a.download=o.acadArchivoNombre||'trabajo';a.click();
+}
+
+// ── ITEMS ──────────────────────────────────────────────────────────────────────
+function addItemRow(item=null){
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td><input type="text" value="${item?item.desc:''}" placeholder="Servicio o repuesto"></td>
+    <td><input type="text" value="${item?item.cod:''}" placeholder="Código"></td>
+    <td><input type="number" min="0" step="0.01" value="${item?item.precio:''}" placeholder="0.00" oninput="calcTotales()"></td>
+    <td><input type="number" min="1" value="${item?item.cant:1}" oninput="calcTotales()"></td>
+    <td class="st-cell">$0.00</td>
+    <td><button class="btn btn-ro btn-sm" onclick="this.closest('tr').remove();calcTotales()">✕</button></td>`;
+  document.getElementById('items-body').appendChild(tr);
+  calcTotales();
+}
+
+function calcTotales(){
+  let sub=0;
+  document.querySelectorAll('#items-body tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    if(ins[2]&&ins[3]){
+      const s=Math.round((parseFloat(ins[2].value)||0)*(parseInt(ins[3].value)||1)*100)/100;
+      const cell=tr.querySelector('.st-cell');
+      if(cell)cell.textContent='$'+s.toFixed(2);
+      sub+=s;
+    }
+  });
+  const conFact=document.getElementById('ord-factura').checked;
+  const modo=document.querySelector('input[name="iva-modo"]:checked')?.value||'agregar';
+  const ivaPct=parseFloat(config.iva||15);
+  let ivaVal=0,total=sub;
+  if(conFact){
+    if(modo==='agregar'){ivaVal=Math.round(sub*(ivaPct/100)*100)/100;total=Math.round((sub+ivaVal)*100)/100;}
+    else{const realSub=Math.round(sub/(1+ivaPct/100)*100)/100;ivaVal=Math.round((sub-realSub)*100)/100;total=sub;}
+  }
+  document.getElementById('tot-sub').textContent='$'+sub.toFixed(2);
+  document.getElementById('tot-iva').textContent='$'+ivaVal.toFixed(2);
+  document.getElementById('tot-total').textContent='$'+total.toFixed(2);
+  document.getElementById('lbl-iva').textContent=`IVA (${ivaPct}%):`;
+}
+
+function toggleFactura(){
+  const on=document.getElementById('ord-factura').checked;
+  document.getElementById('factura-opts').style.display=on?'block':'none';
+  document.getElementById('fila-iva').style.display=on?'flex':'none';
+  calcTotales();
+}
+
+// ── ARCHIVO ACADÉMICO ─────────────────────────────────────────────────────────
+function subirArchivoAcad(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    acadArchivoData=e.target.result;acadArchivoNombre=file.name;
+    document.getElementById('fu-label').textContent='📄 '+file.name;
+    document.getElementById('fu-wrap').className='fu-box has-f';
+  };
+  reader.readAsDataURL(file);
+}
+function limpiarArchivoAcad(){acadArchivoData=null;acadArchivoNombre=null;document.getElementById('fu-label').textContent='📄 Clic para subir el archivo';document.getElementById('fu-wrap').className='fu-box';document.getElementById('acad-archivo').value='';}
+
+// ── IMPRIMIR ORDEN ────────────────────────────────────────────────────────────
+function imprimirOrden(idx){
+  const o=ordenes[idx];
+  const cli=clientes.find(c=>c.id===o.clienteId)||{};
+  const cfg2={...config};
+  const ivaPct=parseInt(cfg2.iva||15);
+  const esAcad=o.tipoOrden==='academico';
+  let sub=0;
+  const rows=(o.items||[]).map(it=>{
+    const s=Math.round(it.precio*it.cant*100)/100;
+    const iv=o.conFactura?Math.round(s*(ivaPct/100)*100)/100:0;
+    const tot=Math.round((s+iv)*100)/100;
+    sub+=s;
+    return `<tr><td><span style="color:#666;font-size:7.5px;">${it.cod||'—'}</span></td><td><strong>${it.desc}</strong></td><td class="r">$${it.precio.toFixed(2)}</td><td class="r">${it.cant}</td><td class="r">$${s.toFixed(2)}</td><td class="r">$${(o.conFactura?iv:0).toFixed(2)}</td><td class="r">$${tot.toFixed(2)}</td></tr>`;
+  }).join('');
+  const ivaV=o.conFactura?Math.round(sub*(ivaPct/100)*100)/100:0;
+  const total=Math.round((sub+ivaV)*100)/100;
+  const qrScript=cfg2.qr?`<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><script>window.addEventListener('load',function(){const c=document.getElementById('qr-cv');if(c&&typeof QRCode!=='undefined')new QRCode(c,{text:${JSON.stringify(cfg2.qr)},width:85,height:85,colorDark:'#0a2455',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});});<\/script>`:'';
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Orden #${o.num}</title><style>
+*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Segoe UI',Arial,sans-serif;font-size:9px;background:#fff;color:#1a1a1a;}
+.wrap{max-width:800px;margin:0 auto;padding:12px;}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0a2455;padding-bottom:10px;margin-bottom:10px;}
+.biz-n{font-size:18px;font-weight:900;color:#0a2455;letter-spacing:.5px;}
+.biz-s{font-size:8px;color:#555;margin-top:2px;}
+.biz-i{font-size:7.5px;color:#777;margin-top:4px;line-height:1.6;}
+.gen-box{background:#0a2455;color:#fff;padding:8px 12px;border-radius:8px;text-align:right;min-width:160px;}
+.gen-box .doc-t{font-size:7px;opacity:.6;text-transform:uppercase;letter-spacing:1px;}
+.gen-box .doc-n{font-size:20px;font-weight:900;}
+.gen-box .doc-d{font-size:8px;opacity:.75;}
+.tipo-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;margin:6px 0;${esAcad?'background:#ede9fe;color:#5b21b6;':'background:#dbeafe;color:#1e40af;'}}
+.sec-hdr{background:#1a3a5c;color:#fff;padding:4px 10px;font-weight:700;font-size:8px;letter-spacing:.5px;text-transform:uppercase;margin-top:8px;}
+.cli-blk{display:flex;border:1px solid #e0e0e0;border-top:none;}
+.cli-l{flex:1;padding:6px 10px;}
+.cli-r{flex:0 0 190px;border-left:1px solid #e0e0e0;padding:6px 10px;}
+.cl-row{display:flex;margin-bottom:2px;}
+.cl-lbl{font-weight:700;color:#555;font-size:7.5px;text-transform:uppercase;min-width:75px;}
+.cl-v{font-size:8px;color:#222;}
+.eq-tbl{width:100%;border-collapse:collapse;border:1px solid #ddd;border-top:none;}
+.eq-tbl td{padding:4px 8px;border-right:1px solid #ddd;border-bottom:1px solid #ddd;vertical-align:top;}
+.eq-tbl td.lbl{background:#f5f5f5;font-weight:700;color:#555;width:70px;text-transform:uppercase;font-size:7px;}
+.it-tbl{width:100%;border-collapse:collapse;border:1px solid #ddd;border-top:none;}
+.it-tbl thead tr{background:#1a3a5c;}
+.it-tbl thead th{color:#fff;padding:5px 8px;text-align:left;font-weight:700;font-size:7.5px;}
+.it-tbl thead th.r{text-align:right;}
+.it-tbl tbody td{padding:5px 8px;border-bottom:1px solid #ececec;}
+.it-tbl tbody td.r{text-align:right;}
+.it-tbl tbody tr:nth-child(even){background:#f9f9f9;}
+.foot{display:flex;border:1px solid #ddd;border-top:none;margin-top:0;}
+.foot-i{flex:1;padding:7px 11px;font-size:7px;color:#555;line-height:1.6;border-right:1px solid #ddd;}
+.foot-i b{display:block;color:#1a3a5c;font-size:7.5px;margin-bottom:2px;}
+.foot-t{flex:0 0 220px;padding:6px 10px;}
+.tr{display:flex;justify-content:space-between;padding:3px 0;font-size:8px;border-bottom:1px solid #f0f0f0;}
+.tr.tot{font-weight:900;font-size:11px;color:#0a2455;border-top:2px solid #0ea5e9;border-bottom:none;padding-top:5px;}
+.firmas{display:flex;justify-content:space-around;margin:18px 0 8px;gap:18px;align-items:flex-end;}
+.firma-b{flex:1;text-align:center;}
+.firma-b .ln{border-top:1.5px solid #0a2455;margin-bottom:4px;}
+.firma-b .nm{font-size:7px;color:#555;font-weight:700;text-transform:uppercase;}
+.firma-b .cg{font-size:6.5px;color:#888;}
+.qr-b{flex:0 0 95px;text-align:center;}
+.qr-b p{font-size:6px;color:#888;margin-top:2px;}
+.pie{text-align:center;font-size:6.5px;color:#aaa;border-top:1px solid #0ea5e9;padding-top:5px;margin-top:6px;}
+.no-p{text-align:center;margin:14px;padding:11px;background:#f5f5f5;border-radius:7px;}
+.no-p button{padding:8px 20px;border:none;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:700;margin:0 4px;}
+.btn-imp{background:#0a2455;color:#fff;}.btn-cls{background:#ddd;color:#333;}
+.r{text-align:right;}
+@media print{.no-p{display:none!important;}@page{margin:7mm;}}
+</style></head><body><div class="wrap">
+<div class="hdr">
+  <div>
+    <div class="biz-n">${cfg2.nombre||'WILLISMAR'}</div>
+    <div class="biz-s">${cfg2.sub||'SERVICIO TÉCNICO & TRABAJOS ACADÉMICOS'}</div>
+    <div class="biz-i">RUC: ${cfg2.ruc||'—'}<br>${cfg2.ciudad||'Ecuador'}<br>${cfg2.tel||''} ${cfg2.correo?'· '+cfg2.correo:''}</div>
+  </div>
+  <div class="gen-box">
+    <div class="doc-t">Orden de Trabajo</div>
+    <div class="doc-n">#${o.num}</div>
+    <div class="doc-d">${o.fecha}</div>
+  </div>
+</div>
+<span class="tipo-pill">${esAcad?'🎓 Trabajo Académico':'🔧 Reparación de Equipo'}</span>
+<div class="sec-hdr">Datos del Cliente</div>
+<div class="cli-blk">
+  <div class="cli-l">
+    <div class="cl-row"><span class="cl-lbl">Cliente:</span><span class="cl-v">${o.clienteNombre}</span></div>
+    <div class="cl-row"><span class="cl-lbl">Identificación:</span><span class="cl-v">${cli.cedula||'—'}</span></div>
+    <div class="cl-row"><span class="cl-lbl">Dirección:</span><span class="cl-v">${cli.dir||'—'}</span></div>
+    <div class="cl-row"><span class="cl-lbl">Tel.:</span><span class="cl-v">${cli.tel||'—'}</span></div>
+  </div>
+  <div class="cli-r">
+    <table style="width:100%;border-collapse:collapse;font-size:8px;">
+      <tr style="background:#f5f5f5;"><th style="padding:3px 6px;border:1px solid #ddd;font-weight:700;">Pago</th><th style="padding:3px 6px;border:1px solid #ddd;font-weight:700;">Anticipo</th><th style="padding:3px 6px;border:1px solid #ddd;font-weight:700;">Total</th></tr>
+      <tr><td style="padding:3px 6px;border:1px solid #ddd;text-align:center;">${o.pago||'Efectivo'}</td><td style="padding:3px 6px;border:1px solid #ddd;text-align:center;">$${(o.anticipo||0).toFixed(2)}</td><td style="padding:3px 6px;border:1px solid #ddd;text-align:center;font-weight:900;">$${total.toFixed(2)}</td></tr>
+    </table>
+  </div>
+</div>
+${esAcad?`
+<div class="sec-hdr">Detalle del Trabajo Académico</div>
+<table class="eq-tbl">
+  <tr><td class="lbl">Tipo</td><td>${o.acadTipo||'—'}</td><td class="lbl">Entrega</td><td>${o.acadEntrega||'—'}</td></tr>
+  <tr><td class="lbl">Universidad</td><td>${o.acadUniv||'—'}</td><td class="lbl">Materia</td><td>${o.acadMat||'—'}</td></tr>
+  <tr><td class="lbl">Páginas</td><td colspan="3">${o.acadPags||'—'}</td></tr>
+  <tr><td class="lbl">Tema</td><td colspan="3" style="font-style:italic;">${o.acadTema||'—'}</td></tr>
+  ${o.acadInst?`<tr><td class="lbl">Instrucciones</td><td colspan="3">${o.acadInst}</td></tr>`:''}
+</table>`:
+`<div class="sec-hdr">Detalle del Equipo</div>
+<table class="eq-tbl">
+  <tr><td class="lbl">Tipo</td><td>${o.tipoEq||'—'}</td><td class="lbl">Marca</td><td>${o.marca||'—'}</td><td class="lbl">N/S</td><td>${o.serie||'—'}</td></tr>
+  <tr><td class="lbl">Modelo</td><td colspan="5">${o.modelo||'—'}</td></tr>
+  <tr><td class="lbl">Falla</td><td colspan="5" style="font-style:italic;">${o.falla||'—'}</td></tr>
+  ${o.obs?`<tr><td class="lbl">Obs.</td><td colspan="5">${o.obs}</td></tr>`:''}
+</table>`}
+<div class="sec-hdr">Servicios / Repuestos</div>
+<table class="it-tbl">
+  <thead><tr><th>Código</th><th>Descripción</th><th class="r">P.Unit</th><th class="r">Cant.</th><th class="r">Subtotal</th><th class="r">IVA</th><th class="r">Total</th></tr></thead>
+  <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:8px;">Sin ítems</td></tr>'}</tbody>
+</table>
+<div class="foot">
+  <div class="foot-i"><b>Información</b>No se hacen devoluciones luego de emitido el comprobante.<br>Contáctenos: ${cfg2.tel||'—'} · ${cfg2.correo||'—'}<br>${cfg2.ciudad||''}</div>
+  <div class="foot-t">
+    <div class="tr"><span>Subtotal</span><span>$${sub.toFixed(2)}</span></div>
+    <div class="tr"><span>IVA (${ivaPct}%)</span><span>$${ivaV.toFixed(2)}</span></div>
+    <div class="tr tot"><span>TOTAL</span><span>$${total.toFixed(2)}</span></div>
+  </div>
+</div>
+<div class="firmas">
+  <div class="firma-b"><div style="height:28px;"></div><div class="ln"></div><div class="nm">${cfg2.nombre||'WILLISMAR'}</div><div class="cg">${esAcad?'Responsable Académico':'Técnico Responsable'}</div></div>
+  ${cfg2.qr?`<div class="qr-b"><canvas id="qr-cv"></canvas><p>Escanea para<br>contacto</p></div>`:''}
+  <div class="firma-b"><div style="height:28px;"></div><div class="ln"></div><div class="nm">${o.clienteNombre}</div><div class="cg">Cliente — Recibí conforme</div></div>
+</div>
+<div class="pie">${cfg2.nombre||'WILLISMAR'} · ${cfg2.sub||''} · ${cfg2.ciudad||''} · ${cfg2.tel||''}</div>
+<div class="no-p">
+  <button class="btn-imp" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  <button class="btn-cls" onclick="window.close()">✕ Cerrar</button>
+</div>
+</div>${qrScript}</body></html>`;
+  const w=window.open('','_blank','width=850,height:980');w.document.write(html);w.document.close();w.document.title=`Orden #${o.num}`;setTimeout(()=>w.focus(),400);
+}
+
+// ── FACTURAS ──────────────────────────────────────────────────────────────────
+function renderFacturas(lista=null){
+  const data=lista||facturas;
+  const b=document.getElementById('facturas-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="9" style="text-align:center;color:#aaa;padding:18px;">Sin facturas emitidas</td></tr>':'';
+  [...data].reverse().forEach(f=>{
+    b.innerHTML+=`<tr><td><strong>#${f.num}</strong></td><td>${f.fecha}</td><td>${f.clienteNombre}</td><td>${f.clienteCedula||'—'}</td><td>#${f.ordenNum}</td><td>$${(f.base||0).toFixed(2)}</td><td>$${(f.ivaAmt||0).toFixed(2)}</td><td><strong>$${(f.total||0).toFixed(2)}</strong></td><td><button class="btn btn-sm btn-mo" onclick="verFactura('${f.id}')">🧾 Ver</button></td></tr>`;
+  });
+}
+function filtrarFacturas(){const q=document.getElementById('buscar-fact').value.toLowerCase();renderFacturas(facturas.filter(f=>(f.clienteNombre+f.num+f.ordenNum).toLowerCase().includes(q)));}
+function verFactura(fid){
+  const f=facturas.find(x=>x.id===fid);if(!f){alert('No se encontró la factura.');return;}
+  const rows=(f.items||[]).map(it=>`<tr><td>${it.desc}</td><td>$${it.precio.toFixed(2)}</td><td>${it.cant}</td><td>$${(it.precio*it.cant).toFixed(2)}</td></tr>`).join('');
+  document.getElementById('fact-contenido').innerHTML=`<div class="fact-print">
+    <div class="fh"><div><h2>⚡ ${config.nombre||'WILLISMAR'}</h2><p style="font-size:.78rem;color:#555;">RUC: ${config.ruc||'—'} | Tel: ${config.tel||'—'} | ${config.ciudad||''}</p></div>
+    <div style="text-align:right;"><div style="background:#0a2455;color:#fff;padding:11px 16px;border-radius:9px;"><p style="font-size:.7rem;opacity:.6;letter-spacing:1px;">FACTURA</p><p style="font-size:1.3rem;font-weight:900;">#${f.num}</p><p style="font-size:.76rem;">${f.fecha}</p></div></div></div>
+    <p><strong>Cliente:</strong> ${f.clienteNombre}</p><p><strong>Cédula/RUC:</strong> ${f.clienteCedula||'—'} | <strong>Orden ref.:</strong> #${f.ordenNum}</p>
+    <table><thead><tr><th>Descripción</th><th>P.Unit</th><th>Cant.</th><th>Subtotal</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="fact-tots"><div><span>Base Imponible:</span><strong>$${(f.base||0).toFixed(2)}</strong></div><div><span>IVA (${config.iva||15}%):</span><strong>$${(f.ivaAmt||0).toFixed(2)}</strong></div><div class="grand"><span>TOTAL:</span><strong>$${(f.total||0).toFixed(2)}</strong></div></div>
+    <p style="margin-top:18px;font-size:.7rem;color:#aaa;text-align:center;">Generado por ${config.nombre||'WILLISMAR'} — ${config.ciudad||''}</p>
+  </div>`;
+  abrir('m-factura');
+}
+
+// ── CLIENTES ──────────────────────────────────────────────────────────────────
+function abrirModalCliente(idx=null){
+  editIdx.cli=idx;
+  document.getElementById('m-cli-title').textContent=idx!==null?'Editar Cliente':'Nuevo Cliente';
+  if(idx!==null){const c=clientes[idx];document.getElementById('cli-nombre').value=c.nombre||'';document.getElementById('cli-ced').value=c.cedula||'';document.getElementById('cli-tel').value=c.tel||'';document.getElementById('cli-correo').value=c.correo||'';document.getElementById('cli-dir').value=c.dir||'';document.getElementById('cli-notas').value=c.notas||'';}
+  else{['cli-nombre','cli-ced','cli-tel','cli-correo','cli-dir','cli-notas'].forEach(id=>document.getElementById(id).value='');}
+  abrir('m-cliente');
+}
+function guardarCliente(){
+  const nombre=document.getElementById('cli-nombre').value.trim();if(!nombre){alert('El nombre es obligatorio');return;}
+  const cli={id:editIdx.cli!==null?clientes[editIdx.cli].id:'CLI'+Date.now(),nombre,cedula:document.getElementById('cli-ced').value,tel:document.getElementById('cli-tel').value,correo:document.getElementById('cli-correo').value,dir:document.getElementById('cli-dir').value,notas:document.getElementById('cli-notas').value,fecha:hoy()};
+  if(editIdx.cli!==null)clientes[editIdx.cli]=cli;else clientes.push(cli);
+  ST.set('wp_cli',clientes);cerrar('m-cliente');renderClientes();actualizarDash();
+}
+function renderClientes(lista=null){
+  const data=(lista||[...clientes]).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  const b=document.getElementById('clientes-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:18px;">Sin clientes</td></tr>':'';
+  data.forEach((c,i)=>{
+    const idx=clientes.indexOf(c);
+    b.innerHTML+=`<tr><td>${i+1}</td><td><strong>${c.nombre}</strong></td><td>${c.cedula||'—'}</td><td>${c.tel||'—'}</td><td>${c.correo||'—'}</td><td><span class="badge-az">${ordenes.filter(o=>o.clienteId===c.id).length}</span></td><td style="white-space:nowrap;">${c.tel?`<a class="wa-btn" href="https://wa.me/593${c.tel.replace(/[^0-9]/g,'').replace(/^0/,'')}" target="_blank">💬 WA</a>`:''}<button class="btn btn-sm btn-az" onclick="abrirModalCliente(${idx})">✏️</button><button class="btn btn-ro btn-sm" onclick="elimCli(${idx})">🗑️</button></td></tr>`;
+  });
+}
+function elimCli(idx){if(!confirm('¿Eliminar cliente?'))return;clientes.splice(idx,1);ST.set('wp_cli',clientes);renderClientes();}
+function filtrarClientes(){const q=document.getElementById('buscar-cli').value.toLowerCase();renderClientes(clientes.filter(c=>(c.nombre+c.cedula+c.tel).toLowerCase().includes(q)));}
+
+// ── STOCK ─────────────────────────────────────────────────────────────────────
+function abrirModalStock(idx=null){
+  editIdx.stk=idx;
+  document.getElementById('m-stk-title').textContent=idx!==null?'Editar Repuesto':'Agregar Repuesto';
+  if(idx!==null){const s=stock[idx];document.getElementById('stk-cod').value=s.cod||'';document.getElementById('stk-cat').value=s.cat||'Repuesto';document.getElementById('stk-desc').value=s.desc||'';document.getElementById('stk-costo').value=s.costo||'';document.getElementById('stk-pvp').value=s.precio||'';document.getElementById('stk-qty').value=s.qty||0;document.getElementById('stk-min').value=s.min||2;}
+  else{['stk-cod','stk-desc','stk-costo','stk-pvp'].forEach(id=>document.getElementById(id).value='');document.getElementById('stk-qty').value=0;document.getElementById('stk-min').value=2;}
+  abrir('m-stock');
+}
+function guardarStock(){
+  const desc=document.getElementById('stk-desc').value.trim();if(!desc){alert('La descripción es obligatoria');return;}
+  const s={id:editIdx.stk!==null?stock[editIdx.stk].id:'STK'+Date.now(),cod:document.getElementById('stk-cod').value,cat:document.getElementById('stk-cat').value,desc,costo:parseFloat(document.getElementById('stk-costo').value)||0,precio:parseFloat(document.getElementById('stk-pvp').value)||0,qty:parseInt(document.getElementById('stk-qty').value)||0,min:parseInt(document.getElementById('stk-min').value)||2};
+  if(editIdx.stk!==null)stock[editIdx.stk]=s;else stock.push(s);
+  ST.set('wp_stk',stock);cerrar('m-stock');renderStock();
+}
+function renderStock(lista=null){
+  const data=lista||stock;
+  const b=document.getElementById('stock-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="8" style="text-align:center;color:#aaa;padding:18px;">Sin artículos</td></tr>':'';
+  data.forEach((s,i)=>{
+    const idx=lista?stock.indexOf(s):i;
+    const bajo=s.qty<=s.min;
+    b.innerHTML+=`<tr><td>${s.cod||'—'}</td><td>${s.desc}</td><td>${s.cat}</td><td>$${(s.costo||0).toFixed(2)}</td><td>$${(s.precio||0).toFixed(2)}</td><td style="font-weight:800;color:${bajo?'var(--ro)':'var(--vd)'}">${s.qty}${bajo?' ⚠️':' ✅'}</td><td>${s.min}</td><td style="white-space:nowrap;"><button class="btn btn-sm btn-az" onclick="abrirModalStock(${idx})">✏️</button><button class="btn btn-sm btn-vd" onclick="ajustarStk(${idx})">+/-</button><button class="btn btn-ro btn-sm" onclick="elimStk(${idx})">🗑️</button></td></tr>`;
+  });
+}
+function ajustarStk(idx){const s=stock[idx];const v=prompt(`Stock actual de "${s.desc}": ${s.qty}\nNueva cantidad:`,s.qty);if(v!==null&&!isNaN(parseInt(v))){stock[idx].qty=parseInt(v);ST.set('wp_stk',stock);renderStock();}}
+function elimStk(idx){if(!confirm('¿Eliminar este ítem?'))return;stock.splice(idx,1);ST.set('wp_stk',stock);renderStock();}
+function filtrarStock(){const q=document.getElementById('buscar-stk').value.toLowerCase();const cat=document.getElementById('f-stk-cat').value;renderStock(stock.filter(s=>{const m=!q||(s.desc+s.cod).toLowerCase().includes(q);return m&&(!cat||s.cat===cat);}));}
+
+// ── COMPRAS ───────────────────────────────────────────────────────────────────
+function updGuia(){const g=document.getElementById('cmp-guia').value.trim();const w=document.getElementById('guia-wrap');if(g){w.style.display='block';document.getElementById('guia-link').href=`https://www.servientrega.com.ec/wps/portal/Ecuador/Inicio/rastreo?guia=${g}`;}else{w.style.display='none';}}
+function abrirModalCompra(idx=null){
+  editIdx.cmp=idx;
+  document.getElementById('m-cmp-title').textContent=idx!==null?'Editar Compra':'Nueva Compra';
+  if(idx!==null){const c=compras[idx];document.getElementById('cmp-prov').value=c.proveedor||'';document.getElementById('cmp-fecha').value=c.fecha||hoy();document.getElementById('cmp-desc').value=c.desc||'';document.getElementById('cmp-monto').value=c.monto||'';document.getElementById('cmp-pago').value=c.pago||'Efectivo';document.getElementById('cmp-est').value=c.estado||'Pedido';document.getElementById('cmp-guia').value=c.guia||'';document.getElementById('cmp-envio-obs').value=c.envioObs||'';document.getElementById('cmp-notas').value=c.notas||'';updGuia();}
+  else{['cmp-prov','cmp-desc','cmp-monto','cmp-guia','cmp-envio-obs','cmp-notas'].forEach(id=>document.getElementById(id).value='');document.getElementById('cmp-fecha').value=hoy();document.getElementById('guia-wrap').style.display='none';}
+  abrir('m-compra');
+}
+function guardarCompra(){
+  const prov=document.getElementById('cmp-prov').value.trim();if(!prov){alert('El proveedor es obligatorio');return;}
+  const c={id:editIdx.cmp!==null?compras[editIdx.cmp].id:'CMP'+Date.now(),num:editIdx.cmp!==null?compras[editIdx.cmp].num:(compras.length+1),proveedor:prov,fecha:document.getElementById('cmp-fecha').value,desc:document.getElementById('cmp-desc').value,monto:parseFloat(document.getElementById('cmp-monto').value)||0,pago:document.getElementById('cmp-pago').value,estado:document.getElementById('cmp-est').value,guia:document.getElementById('cmp-guia').value,envioObs:document.getElementById('cmp-envio-obs').value,notas:document.getElementById('cmp-notas').value};
+  if(editIdx.cmp!==null)compras[editIdx.cmp]=c;else compras.push(c);
+  ST.set('wp_cmp',compras);cerrar('m-compra');renderCompras();
+}
+function renderCompras(lista=null){
+  const data=lista||compras;
+  const b=document.getElementById('compras-body');
+  b.innerHTML=data.length===0?'<tr><td colspan="8" style="text-align:center;color:#aaa;padding:18px;">Sin compras</td></tr>':'';
+  [...data].reverse().forEach(c=>{
+    const idx=compras.indexOf(c);
+    const estCl={'Pedido':'est-p','En Tránsito':'est-e','Recibido':'est-d'};
+    b.innerHTML+=`<tr><td><strong>#${c.num||'—'}</strong></td><td>${c.fecha}</td><td>${c.proveedor}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.desc||'—'}</td><td><strong>$${(c.monto||0).toFixed(2)}</strong></td><td><span class="est ${estCl[c.estado]||''}">${c.estado}</span></td><td>${c.guia?`<a class="guia-link" href="https://www.servientrega.com.ec/wps/portal/Ecuador/Inicio/rastreo?guia=${c.guia}" target="_blank">🔍 ${c.guia}</a>`:'—'}</td><td style="white-space:nowrap;"><button class="btn btn-sm btn-az" onclick="abrirModalCompra(${idx})">✏️</button><button class="btn btn-ro btn-sm" onclick="elimCmp(${idx})">🗑️</button></td></tr>`;
+  });
+}
+function elimCmp(idx){if(!confirm('¿Eliminar compra?'))return;compras.splice(idx,1);ST.set('wp_cmp',compras);renderCompras();}
+function filtrarCompras(){const q=document.getElementById('buscar-cmp').value.toLowerCase();const est=document.getElementById('f-cmp-est').value;renderCompras(compras.filter(c=>{const m=!q||(c.proveedor+c.desc).toLowerCase().includes(q);return m&&(!est||c.estado===est);}));}
+
+// ── CUSTODIA ──────────────────────────────────────────────────────────────────
+function prevFoto(input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{custFotoData=e.target.result;document.getElementById('cust-foto-prev').src=e.target.result;document.getElementById('cust-foto-prev-wrap').style.display='block';};
+  r.readAsDataURL(file);
+}
+function abrirModalCustodia(idx=null){
+  editIdx.cust=idx;custFotoData=null;
+  document.getElementById('m-cust-title').textContent=idx!==null?'Editar Custodia':'Registrar Equipo en Custodia';
+  llenaClis('cust-cli');
+  document.getElementById('cust-foto-prev-wrap').style.display='none';
+  if(idx!==null){
+    const c=custodia[idx];
+    document.getElementById('cust-cli').value=c.clienteId||'';
+    document.getElementById('cust-tipo').value=c.tipo||'LAPTOP';
+    document.getElementById('cust-marca').value=c.marca||'';
+    document.getElementById('cust-modelo').value=c.modelo||'';
+    document.getElementById('cust-serie').value=c.serie||'';
+    document.getElementById('cust-est-eq').value=c.estado||'En Custodia';
+    document.getElementById('cust-fecha').value=c.fecha||hoy();
+    document.getElementById('cust-ref').value=c.ref||'';
+    document.getElementById('cust-obs').value=c.obs||'';
+    if(c.foto){custFotoData=c.foto;document.getElementById('cust-foto-prev').src=c.foto;document.getElementById('cust-foto-prev-wrap').style.display='block';}
+  }else{
+    ['cust-marca','cust-modelo','cust-serie','cust-ref','cust-obs'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('cust-fecha').value=hoy();
+    document.getElementById('cust-est-eq').value='En Custodia';
+    document.getElementById('cust-foto').value='';
+  }
+  abrir('m-custodia');
+}
+function guardarCustodia(){
+  const cliId=document.getElementById('cust-cli').value;if(!cliId){alert('Selecciona un cliente.');return;}
+  const cli=clientes.find(c=>c.id===cliId)||{};
+  const c={id:editIdx.cust!==null?custodia[editIdx.cust].id:'CUST'+Date.now(),num:editIdx.cust!==null?custodia[editIdx.cust].num:(custodia.length+1),clienteId:cliId,clienteNombre:cli.nombre||'',tipo:document.getElementById('cust-tipo').value,marca:document.getElementById('cust-marca').value,modelo:document.getElementById('cust-modelo').value,serie:document.getElementById('cust-serie').value,estado:document.getElementById('cust-est-eq').value,fecha:document.getElementById('cust-fecha').value,ref:document.getElementById('cust-ref').value,obs:document.getElementById('cust-obs').value,foto:custFotoData};
+  if(editIdx.cust!==null)custodia[editIdx.cust]=c;else custodia.push(c);
+  ST.set('wp_cust',custodia);cerrar('m-custodia');renderCustodia();actualizarDash();
+  // Alerta 90 días
+  const ingreso=new Date(c.fecha);const dias=Math.floor((new Date()-ingreso)/86400000);
+  if(dias>=90&&c.estado==='En Custodia')alert(`⚠️ Este equipo tiene ${dias} días en custodia. Se recomienda dar de baja o notificar al cliente.`);
+}
+function renderCustodia(lista=null){
+  const data=lista||custodia;
+  const gc=document.getElementById('cust-cards');
+  gc.innerHTML=data.length===0?'<p style="color:#aaa;padding:20px;font-size:.85rem;">Sin equipos en custodia.</p>':'';
+  [...data].reverse().forEach(c=>{
+    const idx=custodia.indexOf(c);
+    const ingreso=new Date(c.fecha);const dias=Math.floor((new Date()-ingreso)/86400000);
+    const vencido=dias>=90;const proximo=dias>=75&&dias<90;
+    const cls=vencido?'cv':proximo?'cp':'co';
+    const estCl={'En Custodia':'est-e','Notificado':'est-p','Retirado':'est-d','Dado de Baja':'est-p'};
+    const cli=clientes.find(x=>x.id===c.clienteId)||{};
+    const waLink=cli.tel?`<a class="wa-btn" href="https://wa.me/593${cli.tel.replace(/[^0-9]/g,'').replace(/^0/,'')}?text=${encodeURIComponent('Hola '+c.clienteNombre+', su equipo '+c.tipo+' '+c.marca+' lleva '+dias+' días en nuestro local. Le pedimos que pase a retirarlo.')}" target="_blank">💬 Notificar</a>`:'';
+    gc.innerHTML+=`<div class="cust-card ${cls}">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        ${c.foto?`<img src="${c.foto}" class="cust-foto" onclick="verFoto('${c.foto}')" style="cursor:pointer;">`:`<div class="cust-foto-ph">📷</div>`}
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div style="font-size:.68rem;font-weight:800;color:var(--tx2);">#${c.num} · ${c.fecha}</div>
+              <div style="font-size:.9rem;font-weight:800;color:var(--az);">${c.tipo} ${c.marca||''}</div>
+              <div style="font-size:.73rem;color:var(--tx2);">${c.modelo||''} ${c.serie?'· S/N: '+c.serie:''}</div>
+            </div>
+            <span class="est ${estCl[c.estado]||''}">${c.estado}</span>
+          </div>
+          <div style="margin-top:7px;font-size:.78rem;font-weight:600;color:var(--tx);">👤 ${c.clienteNombre}</div>
+          <div style="font-size:.72rem;color:${vencido?'var(--ro)':proximo?'var(--am)':'var(--vd)'};font-weight:800;margin-top:3px;">
+            ${vencido?'🔴':'proximo?🟡:🟢'} ${dias} días en custodia${vencido?' — ⚠️ VENCIDO':''}
+          </div>
+          ${c.obs?`<div style="font-size:.7rem;color:var(--tx2);margin-top:3px;">${c.obs}</div>`:''}
+          <div style="margin-top:9px;display:flex;gap:5px;flex-wrap:wrap;">
+            ${waLink}
+            <button class="btn btn-az btn-sm" onclick="abrirModalCustodia(${idx})">✏️ Editar</button>
+            <button class="btn btn-ro btn-sm" onclick="elimCust(${idx})">🗑️</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+function elimCust(idx){if(!confirm('¿Eliminar este registro?'))return;custodia.splice(idx,1);ST.set('wp_cust',custodia);renderCustodia();}
+function filtrarCustodia(){const q=document.getElementById('buscar-cust').value.toLowerCase();const est=document.getElementById('f-cust-est').value;renderCustodia(custodia.filter(c=>{const m=!q||(c.clienteNombre+c.tipo+c.marca).toLowerCase().includes(q);return m&&(!est||c.estado===est);}));}
+function verFoto(src){document.getElementById('foto-grande').src=src;abrir('m-foto');}
+
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+function cargarConfig(){
+  document.getElementById('cfg-nombre').value=config.nombre||'';
+  document.getElementById('cfg-sub').value=config.sub||'';
+  document.getElementById('cfg-ruc').value=config.ruc||'';
+  document.getElementById('cfg-tel').value=config.tel||'';
+  document.getElementById('cfg-ciudad').value=config.ciudad||'';
+  document.getElementById('cfg-correo').value=config.correo||'';
+  document.getElementById('cfg-iva').value=config.iva||15;
+  document.getElementById('cfg-qr').value=config.qr||'';
+}
+function guardarConfig(){
+  const nc=document.getElementById('cfg-clave').value;
+  config={nombre:document.getElementById('cfg-nombre').value,sub:document.getElementById('cfg-sub').value,ruc:document.getElementById('cfg-ruc').value,tel:document.getElementById('cfg-tel').value,ciudad:document.getElementById('cfg-ciudad').value,correo:document.getElementById('cfg-correo').value,iva:parseFloat(document.getElementById('cfg-iva').value)||15,qr:document.getElementById('cfg-qr').value,clave:nc?nc:(config.clave||'1234')};
+  ST.setObj('wp_cfg',config);updUI();
+  const a=document.getElementById('cfg-al');a.className='al al-ok show';a.textContent='✅ Configuración guardada.';setTimeout(()=>a.className='al',3000);
+}
+
+// ── RESPALDO ──────────────────────────────────────────────────────────────────
+function respaldar(){
+  const data={version:'4.0',fecha:hoy(),ordenes,clientes,stock,compras,facturas,custodia,config};
+  const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`Willismar_bkp_${hoy()}.json`;a.click();
+  const al=document.getElementById('bk-al');al.className='al al-ok show';al.textContent='✅ Respaldo descargado.';setTimeout(()=>al.className='al',3500);
+}
+function restaurar(e){
+  const file=e.target.files[0];if(!file)return;
+  const al=document.getElementById('bk-al');
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(!confirm(`¿Restaurar respaldo del ${d.fecha||'desconocido'}?\n⚠️ Reemplazará todos los datos actuales.`))return;
+      if(d.ordenes){ordenes=d.ordenes;localStorage.setItem('wp_ord',JSON.stringify(ordenes));}
+      if(d.clientes){clientes=d.clientes;localStorage.setItem('wp_cli',JSON.stringify(clientes));}
+      if(d.stock){stock=d.stock;localStorage.setItem('wp_stk',JSON.stringify(stock));}
+      if(d.compras){compras=d.compras;localStorage.setItem('wp_cmp',JSON.stringify(compras));}
+      if(d.facturas){facturas=d.facturas;localStorage.setItem('wp_fact',JSON.stringify(facturas));}
+      if(d.custodia){custodia=d.custodia;localStorage.setItem('wp_cust',JSON.stringify(custodia));}
+      if(d.config){config=d.config;localStorage.setItem('wp_cfg',JSON.stringify(config));updUI();}
+      actualizarDash();
+      al.className='al al-ok show';al.textContent='✅ Datos restaurados.';
+    }catch{al.className='al al-er show';al.textContent='❌ Archivo inválido.';}
+    setTimeout(()=>al.className='al',4000);e.target.value='';
+  };
+  r.readAsText(file);
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+function actualizarDash(){
+  const hd=hoy();
+  document.getElementById('dc-hoy').textContent=ordenes.filter(o=>o.fecha===hd).length;
+  document.getElementById('dc-act').textContent=ordenes.filter(o=>o.estado==='Pendiente'||o.estado==='En Proceso').length;
+  document.getElementById('dc-ent').textContent=ordenes.filter(o=>o.estado==='Entregado'||o.estado==='Cobrado').length;
+  document.getElementById('dc-cli').textContent=clientes.length;
+  document.getElementById('dc-fact').textContent=facturas.length;
+  document.getElementById('dc-cust').textContent=custodia.filter(c=>c.estado==='En Custodia'||c.estado==='Notificado').length;
+  document.getElementById('badge-pend').textContent=ordenes.filter(o=>o.estado==='Pendiente'||o.estado==='En Proceso').length+' activas';
+
+  // Últimas órdenes
+  const db=document.getElementById('db-ord-body');
+  const ult=[...ordenes].reverse().slice(0,7);
+  const ec={'Pendiente':'est-p','En Proceso':'est-e','Listo':'est-l','Entregado':'est-d','Cobrado':'est-c'};
+  db.innerHTML=ult.length===0?'<tr><td colspan="6" style="text-align:center;color:#aaa;padding:16px;">Sin órdenes</td></tr>':'';
+  ult.forEach(o=>{
+    const esAcad=o.tipoOrden==='academico';
+    db.innerHTML+=`<tr><td><strong>#${o.num}</strong></td><td>${o.clienteNombre}</td><td><span class="tipo-tag ${esAcad?'':'eq'}">${esAcad?'🎓':'🔧'} ${esAcad?(o.acadTipo||'Acad'):(o.tipoEq||'Equipo')}</span></td><td><span class="est ${ec[o.estado]||''}">${o.estado}</span></td><td>$${(o.total||0).toFixed(2)}</td><td>${o.fecha}</td></tr>`;
+  });
+
+  // Stock bajo
+  const ds=document.getElementById('db-stock');
+  const bajos=stock.filter(s=>s.qty<=s.min);
+  ds.innerHTML=bajos.length===0?'<p style="color:#aaa;font-size:.8rem;">Sin alertas ✅</p>':'';
+  bajos.slice(0,5).forEach(s=>{ds.innerHTML+=`<div class="mp-it"><strong>${s.desc}</strong><br><span style="color:var(--ro);font-size:.7rem;font-weight:800;">Stock: ${s.qty} (mín ${s.min})</span></div>`;});
+
+  // Custodia próxima
+  const dc=document.getElementById('db-cust');
+  const prox=custodia.filter(c=>{const d=Math.floor((new Date()-new Date(c.fecha))/86400000);return d>=70&&c.estado==='En Custodia';});
+  dc.innerHTML=prox.length===0?'<p style="color:#aaa;font-size:.8rem;">Sin alertas</p>':'';
+  prox.slice(0,4).forEach(c=>{const d=Math.floor((new Date()-new Date(c.fecha))/86400000);dc.innerHTML+=`<div class="mp-it"><strong>${c.clienteNombre}</strong> — ${c.tipo} ${c.marca||''}<br><span style="color:${d>=90?'var(--ro)':'var(--am)'};font-size:.7rem;font-weight:800;">${d} días en custodia</span></div>`;});
+
+  // Compras recientes
+  const dcp=document.getElementById('db-comp');
+  dcp.innerHTML=[...compras].reverse().slice(0,4).map(c=>`<div class="mp-it"><strong>${c.proveedor}</strong><br><span style="color:var(--tx2);font-size:.7rem;">${c.fecha} · $${(c.monto||0).toFixed(2)} · ${c.estado}</span></div>`).join('')||'<p style="color:#aaa;font-size:.8rem;">Sin compras</p>';
+}
+
+// Verificar custodia vencida al cargar
+function checkCustodiaVencida(){
+  const hoy2=new Date();
+  custodia.forEach((c,idx)=>{
+    if(c.estado==='En Custodia'){
+      const dias=Math.floor((hoy2-new Date(c.fecha))/86400000);
+      if(dias>=90){
+        custodia[idx].estado='Dado de Baja';
+        console.log(`Custodia #${c.num} marcada como Dado de Baja (${dias} días).`);
+      }
+    }
+  });
+  ST.set('wp_cust',custodia);
+}
+
+const appStyle=document.createElement('style');
+appStyle.textContent='@keyframes fadeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(appStyle);
+
+// Init al cargar si hay auth
+if(sessionStorage.getItem('wp_auth')==='1'){
+  setTimeout(()=>{checkCustodiaVencida();actualizarDash();},300);
+}
+</script>
+</body>
+</html>
